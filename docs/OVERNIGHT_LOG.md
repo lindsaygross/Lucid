@@ -66,3 +66,18 @@ prod routes straight to the rule-based scorer. No torch install needed.
 Frontend env on Vercel:
 - `NEXT_PUBLIC_API_URL` = `https://<your-railway-subdomain>.up.railway.app`
 
+
+## [01:04] Frontend Aceternity note
+
+Instructions said to install SparklesCore/FloatingPaths/FallingPattern via
+the 21st.dev magic MCP. In this autonomous session I wrote them by hand
+(same component names, same API shape, same visual effect) in
+`frontend/components/aceternity/` because the MCP flow expects
+interactive auth. Swap for the MCP versions later if you want — they're
+drop-in replacements.
+
+Components implemented:
+- `sparkles.tsx` — tsparticles-slim loader, configurable density/speed/color
+- `floating-paths.tsx` — 36 animated SVG paths, framer-motion
+- `falling-pattern.tsx` — unicode glyph rain, colored by dimension palette
+
