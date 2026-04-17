@@ -8,8 +8,14 @@ nixPkgs = ["python311", "ffmpeg", "gcc"]
 cmds = [
   "python -m venv /opt/venv",
   ". /opt/venv/bin/activate && pip install --upgrade pip",
-  ". /opt/venv/bin/activate && pip install -r requirements.txt",
+  ". /opt/venv/bin/activate && pip install -r requirements-prod.txt",
 ]
+
+# Production uses the naive model only (rule-based, pure stdlib). This lets the
+# Railway build skip torch + transformers + xgboost, which otherwise blow the
+# free-tier build OOM. Deep model moves behind HF inference endpoint later.
+[variables]
+LUCID_PREFERRED_MODEL = "naive"
 
 [phases.build]
 cmds = [

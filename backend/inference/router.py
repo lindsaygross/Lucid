@@ -9,11 +9,14 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-from backend.inference.classical import ClassicalPredictor
-from backend.inference.deep import DeepPredictor
 from backend.inference.naive import NaivePredictor
 from backend.inference.schemas import Prediction
+
+if TYPE_CHECKING:
+    from backend.inference.classical import ClassicalPredictor
+    from backend.inference.deep import DeepPredictor
 
 logger = logging.getLogger(__name__)
 
@@ -21,15 +24,17 @@ logger = logging.getLogger(__name__)
 class InferenceRouter:
     """Holds loaded models and routes predict() calls.
 
-    Lazy-loads each model on first use.
+    Lazy-loads each model on first use. Heavy backends (classical = xgboost,
+    deep = torch/transformers) are only imported when actually requested, so a
+    minimal production deployment (e.g., naive-only) does not need those deps.
     """
 
     def __init__(self, preferred: str = "deep", model_dir: str = "models") -> None:
         self.preferred = preferred
         self.model_dir = Path(model_dir)
         self._naive: NaivePredictor | None = None
-        self._classical: ClassicalPredictor | None = None
-        self._deep: DeepPredictor | None = None
+        self._classical: "ClassicalPredictor | None" = None
+        self._deep: "DeepPredictor | None" = None
 
     def predict(self, text: str) -> Prediction:
         """Route to the preferred model with graceful fallbacks."""
@@ -56,10 +61,12 @@ class InferenceRouter:
             return self._naive
         if name == "classical":
             if self._classical is None:
+                from backend.inference.classical import ClassicalPredictor  # lazy import
                 self._classical = ClassicalPredictor(self.model_dir / "classical.pkl")
             return self._classical
         if name == "deep":
             if self._deep is None:
+                from backend.inference.deep import DeepPredictor  # lazy import
                 self._deep = DeepPredictor(self.model_dir / "distilbert")
             return self._deep
         raise ValueError(f"unknown model: {name}")

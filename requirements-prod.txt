@@ -1,0 +1,26 @@
+# Production requirements for Railway / slim backend deploy.
+#
+# Drops the heavy training + deep-learning stack:
+#   - torch, transformers, datasets, accelerate  (DistilBERT on CPU is infeasible
+#     on Railway's free tier anyway; deep inference moves behind a HF endpoint
+#     later if we need it in prod)
+#   - openai-whisper  (pulls torch; use Whisper API only, fall back to empty
+#     transcript if no OPENAI_API_KEY)
+#   - xgboost, scikit-learn, nltk, vaderSentiment, textstat  (classical only
+#     used locally for the assignment report)
+#   - pandas, numpy, pyarrow, praw, gradio, matplotlib, seaborn, krippendorff
+#     (data / eval-time only)
+#
+# Prod fallback model in router: naive (rule-based, pure stdlib). Set env var
+# LUCID_PREFERRED_MODEL=naive on Railway so torch/xgboost are never imported.
+fastapi>=0.110.0
+uvicorn[standard]>=0.27.0
+anthropic>=0.40.0
+openai>=1.40.0
+yt-dlp>=2024.8.0
+ffmpeg-python>=0.2.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+python-multipart>=0.0.9
+Pillow>=10.2.0

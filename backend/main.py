@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -46,10 +47,15 @@ _router: InferenceRouter | None = None
 
 
 def get_router() -> InferenceRouter:
-    """Lazy-initialize the InferenceRouter on first request."""
+    """Lazy-initialize the InferenceRouter on first request.
+
+    In production (Railway), set `LUCID_PREFERRED_MODEL=naive` to skip
+    torch/xgboost import paths entirely. Local dev keeps the full stack.
+    """
     global _router
     if _router is None:
-        _router = InferenceRouter(preferred="deep", model_dir=str(REPO_ROOT / "models"))
+        preferred = os.getenv("LUCID_PREFERRED_MODEL", "deep")
+        _router = InferenceRouter(preferred=preferred, model_dir=str(REPO_ROOT / "models"))
     return _router
 
 
