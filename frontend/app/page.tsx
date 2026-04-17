@@ -112,10 +112,7 @@ function Hero() {
       </div>
 
       <div className="relative z-10 flex flex-col items-center gap-6 text-center">
-        <LucidLogo
-          className="text-[4rem] leading-none sm:text-[7rem] md:text-[9rem]"
-          letterClassName="text-[4rem] leading-none sm:text-[7rem] md:text-[9rem]"
-        />
+        <LucidLogo className="text-[4rem] leading-none sm:text-[7rem] md:text-[9rem]" />
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
