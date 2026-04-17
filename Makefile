@@ -30,7 +30,7 @@ help:
 	@echo "  make clean           Remove caches, build artifacts"
 
 install:
-	pip install -r requirements.txt
+	pip install -r requirements-dev.txt
 
 data:
 	python -m scripts.fetch_datasets

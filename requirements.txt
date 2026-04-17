@@ -1,58 +1,20 @@
-# Core
+# Production / deploy requirements (Railway picks this up automatically).
+#
+# Slim stack: FastAPI + API clients (Anthropic, OpenAI) + yt-dlp + Pillow.
+# Drops the heavy training + eval stack — those live in requirements-dev.txt.
+#
+# The inference router falls back naive → classical → deep depending on what
+# imports successfully. In this slim install only naive loads; classical and
+# deep gracefully degrade. Set LUCID_PREFERRED_MODEL=naive to skip the noisy
+# fallback-chain log lines in prod.
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
+anthropic>=0.40.0
+openai>=1.40.0
+yt-dlp>=2024.8.0
+ffmpeg-python>=0.2.0
 pydantic>=2.5.0
 pydantic-settings>=2.1.0
 python-dotenv>=1.0.0
 python-multipart>=0.0.9
-
-# LLM APIs
-anthropic>=0.40.0
-openai>=1.40.0
-
-# TikTok download + media processing
-yt-dlp>=2024.8.0
-ffmpeg-python>=0.2.0
-
-# Transcription (OpenAI Whisper, either API or local)
-openai-whisper>=20231117
-
-# Image handling for Claude Vision
 Pillow>=10.2.0
-
-# NLP + classical ML
-scikit-learn>=1.4.0
-xgboost>=2.0.0
-nltk>=3.8.1
-vaderSentiment>=3.3.2
-textstat>=0.7.4
-
-# Deep learning
-torch>=2.2.0
-transformers>=4.40.0
-datasets>=2.18.0
-accelerate>=0.30.0
-
-# Data handling
-pandas>=2.2.0
-numpy>=1.26.0
-pyarrow>=15.0.0
-
-# Reddit scraping
-praw>=7.7.1
-
-# Gradio for gold-set labeling app
-gradio>=4.20.0
-
-# Evaluation / stats
-scipy>=1.12.0
-krippendorff>=0.6.1
-matplotlib>=3.8.0
-seaborn>=0.13.0
-
-# HuggingFace Hub (model artifact hosting)
-huggingface-hub>=0.20.0
-
-# Dev / test
-pytest>=8.0.0
-httpx>=0.27.0

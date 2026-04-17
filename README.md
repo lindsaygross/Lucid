@@ -54,7 +54,7 @@ brew install ffmpeg
 ```bash
 python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 cp .env.example .env
 # edit .env: paste your Anthropic API key as ANTHROPIC_API_KEY=...
 ```
