@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
 import { AboutSection, Cite } from "@/components/about/about-section";
 
@@ -123,18 +122,19 @@ export default function AboutPage() {
         <AboutSection
           id="meta-case"
           eyebrow="§ 02 — the landmark case"
-          heading="This isn&rsquo;t only an academic question. It is currently the single largest consumer-protection case in the American federal courts."
+          heading="This isn&rsquo;t only an academic question. It&rsquo;s being argued in court right now."
         >
           <p>
-            As of 2026, Meta, TikTok / ByteDance, Snap, YouTube, and Alphabet are defendants in a
+            Meta, TikTok / ByteDance, Snap, YouTube, and Alphabet are all defendants in a
             consolidated multidistrict litigation in the Northern District of California:{" "}
             <em>In re: Social Media Adolescent Addiction / Personal Injury Products Liability
               Litigation</em>, <Cite href="#ref-mdl-3047">MDL No. 3047</Cite>, before Judge Yvonne
             Gonzalez Rogers (case 4:22-md-03047-YGR). The MDL consolidates thousands of individual
-            personal-injury cases, school-district suits, and state attorney-general actions. The
-            plaintiffs&rsquo; core theory is straightforward: the products were designed to
-            maximize engagement in a way the defendants knew produced addictive use patterns in
-            minors, and were marketed as safe anyway.
+            personal-injury suits, hundreds of school-district actions, and attorney-general
+            filings from more than forty states. The plaintiffs&rsquo; core theory is
+            straightforward: the products were designed to maximize engagement in a way the
+            defendants knew produced addictive use patterns in minors, and were marketed as safe
+            anyway.
           </p>
           <p>
             On October 24, 2023, a multi-state coalition — forty-two attorneys general in total —
@@ -154,11 +154,12 @@ export default function AboutPage() {
             <em>Wall Street Journal</em> published the &ldquo;Facebook Files&rdquo; based on
             internal Meta research leaked by a former employee, Frances Haugen. One slide from a
             2019 internal presentation read, verbatim: &ldquo;We make body image issues worse for
-            one in three teen girls.&rdquo; Another stated that among teens who reported suicidal
-            thoughts, substantial minorities traced the feeling back to Instagram. Haugen
-            identified herself publicly on <em>60 Minutes</em> on October 3, 2021, and testified
-            before the U.S. Senate Commerce Subcommittee days later. Meta contested the framing
-            but did not, by and large, contest that the research existed (<Cite href="#ref-cnbc-wsj-2021">Vanian, CNBC, 2021</Cite>;{" "}
+            one in three teen girls.&rdquo; Another reported that thirty-two percent of teen girls
+            said that when they felt bad about their bodies, Instagram made them feel worse.
+            Haugen identified herself publicly on <em>60 Minutes</em> on October 3, 2021, and
+            testified before the U.S. Senate Commerce Subcommittee two days later. Meta contested
+            the framing of the research but not, by and large, its existence
+            (<Cite href="#ref-cnbc-wsj-2021">Vanian, CNBC, 2021</Cite>;{" "}
             <Cite href="#ref-nyt-teen-girls-2021">Wells, NYT, 2021</Cite>;{" "}
             <Cite href="#ref-npr-haugen-2021">Allyn, NPR, 2021</Cite>).
           </p>
@@ -262,9 +263,9 @@ export default function AboutPage() {
           <p>
             The pragmatic solution is what the literature has started calling{" "}
             <em>LLM-as-a-judge</em>. Claude Sonnet 4.5 is given the full rubric — the one in{" "}
-            <Link href="/#" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">
+            <a href="#rubric" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">
               §03 above
-            </Link>{" "}
+            </a>{" "}
             — along with eight few-shot examples spanning 0 / 1 / 2 severity per dimension, and it
             labels every item in the training corpus. DistilBERT is then trained on those labels.
             The framing is borrowed from Anthropic&rsquo;s{" "}
@@ -330,7 +331,365 @@ export default function AboutPage() {
             information — it tells me which part of the rubric needs to be tightened or dropped.
           </p>
         </AboutSection>
+
+        <AboutSection
+          id="model"
+          eyebrow="§ 05 — why a model, not a lecture"
+          heading="What the pipeline actually does when you paste a URL."
+        >
+          <p>
+            I could have written this as an essay. A lot of media-literacy work is essays.
+            Essays have a problem, which is that they describe the machinery in the abstract and
+            then leave the reader to identify it in the wild, which is exactly the thing
+            that&rsquo;s hard. A model that takes a specific post and tells you which dimensions
+            it scores on is a different kind of instrument — it turns a vague intuition into
+            something concrete you can point at.
+          </p>
+          <p>Here&rsquo;s what happens when you paste a TikTok URL, described without equations:</p>
+          <ol className="flex list-decimal flex-col gap-3 pl-5 marker:font-mono marker:text-[12px] marker:text-zinc-500">
+            <li>
+              The video is downloaded and its caption pulled from metadata.
+            </li>
+            <li>
+              The audio is transcribed to text by Whisper, a widely used speech-recognition model.
+            </li>
+            <li>
+              Four evenly-spaced keyframes are pulled from the video, and a vision-language model
+              (Claude Vision) reads any on-screen overlay text from those frames. This is the
+              closest thing in the stack to &ldquo;watching&rdquo; the video.
+            </li>
+            <li>
+              The three streams — caption, transcript, overlay — are concatenated into one fused
+              text blob. From the model&rsquo;s perspective, a TikTok is just that blob.
+            </li>
+            <li>
+              The fused text is passed to a fine-tuned{" "}
+              <Cite href="#ref-sanh-2019">DistilBERT</Cite> classifier with a multi-output head —
+              six per-dimension probabilities plus a composite. That&rsquo;s the Scroll Trap Score
+              you see.
+            </li>
+          </ol>
+          <p>
+            The model was trained on roughly 3,500 items sampled from two established clickbait
+            corpora and a small TikTok scrape, all relabeled against our six-dimension rubric.
+            That sample size is explicitly small; it would not satisfy a commercial T&amp;S team.
+            The full technical report, with metrics, confusion matrices, a noise-robustness
+            experiment, and an error analysis, lives in the{" "}
+            <a
+              href="https://github.com/lindsaygross/Lucid"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-sm text-zinc-200 underline decoration-white/20 decoration-dotted underline-offset-4 transition-colors hover:decoration-white/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+            >
+              project repository on GitHub
+            </a>
+            . The fine-tuned model weights are on the{" "}
+            <a
+              href="https://huggingface.co/lindsaygross32/lucid-distilbert"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-sm text-zinc-200 underline decoration-white/20 decoration-dotted underline-offset-4 transition-colors hover:decoration-white/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+            >
+              Hugging Face Hub
+            </a>
+            .
+          </p>
+        </AboutSection>
+
+        <AboutSection
+          id="ethics"
+          eyebrow="§ 06 — ethics &amp; limitations"
+          heading="Four things this tool is not, stated plainly."
+        >
+          <p>
+            <strong className="text-white">It is not ground truth.</strong> The training labels
+            come from a language model applying a rubric I wrote. A different labeler with a
+            different taxonomy would produce different numbers. The human-validation pass in
+            §04 bounds how much to trust the labels, but it doesn&rsquo;t make them authoritative.
+            Treat the scores as an informed estimate, not a measurement.
+          </p>
+          <p>
+            <strong className="text-white">It does not read minds.</strong> The model scores
+            surface features of a post&rsquo;s fused text. It says nothing about what the creator
+            intended, whether the underlying claim is true, or how any specific viewer will feel
+            after watching. A documentary, a fundraiser, and a scam can all score high on
+            Emotional Manipulation if they use the same rhetorical moves. The score is a signal,
+            not a verdict.
+          </p>
+          <p>
+            <strong className="text-white">It is a small research dataset.</strong> Around 3,500
+            items, heavily weighted toward English-language clickbait headlines plus a modest
+            TikTok scrape. This is enough to compare naive, classical, and deep approaches on a
+            fixed rubric. It is not enough to underwrite a commercial moderation product, and I
+            don&rsquo;t claim otherwise.
+          </p>
+          <p>
+            <strong className="text-white">It is one cut of the space.</strong> The six-dimension
+            taxonomy is defensible — every axis is grounded in at least one line of peer-reviewed
+            research — but it is not the only defensible taxonomy. A researcher working primarily
+            in misinformation or in persuasion studies might carve up the same content space
+            differently. The rubric is a starting point for making the invisible legible, not the
+            final word on what &ldquo;manipulation&rdquo; means.
+          </p>
+        </AboutSection>
+
+        <AboutSection
+          id="references"
+          eyebrow="§ 07 — references"
+          heading="Every factual claim above, sourced."
+        >
+          <p className="text-[15px] text-zinc-400">
+            Grouped by section. News and court filings first, then behavioral-research citations
+            underpinning the rubric, then the machine-learning literature.
+          </p>
+
+          <div className="flex flex-col gap-8">
+            <RefGroup title="§ 02 — legal &amp; journalism">
+              <Reference id="ref-mdl-3047">
+                U.S. District Court, Northern District of California.{" "}
+                <em>In re: Social Media Adolescent Addiction / Personal Injury Products
+                  Liability Litigation</em>, Case 4:22-md-03047-YGR (MDL No. 3047).{" "}
+                <RefLink href="https://cand.uscourts.gov/cases-e-filing/cases/422-md-03047-ygr/re-social-media-adolescent-addictionpersonal-injury-products">
+                  cand.uscourts.gov
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-njag-2023">
+                New Jersey Office of the Attorney General (2023, October 24). AG Platkin, 41 other
+                attorneys general sue Meta for harms to youth from Instagram, Facebook.{" "}
+                <RefLink href="https://www.njoag.gov/ag-platkin-41-other-attorneys-general-sue-meta-for-harms-to-youth-from-instagram-facebook/">
+                  njoag.gov
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-nyag-2023">
+                Office of the New York State Attorney General (2023, October 24). Attorney General
+                James and multistate coalition sue Meta for harming youth.{" "}
+                <RefLink href="https://ag.ny.gov/press-release/2023/attorney-general-james-and-multistate-coalition-sue-meta-harming-youth">
+                  ag.ny.gov
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-npr-ags-2023">
+                Allyn, B. (2023, October 24). States sue Meta, claiming Instagram, Facebook fueled
+                youth mental health crisis. <em>NPR</em>.{" "}
+                <RefLink href="https://www.npr.org/2023/10/24/1208219216/states-sue-meta-claiming-instagram-facebook-fueled-youth-mental-health-crisis">
+                  npr.org
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-cnbc-wsj-2021">
+                Vanian, J. (2021, September 14). Facebook documents show how toxic Instagram is
+                for teens, Wall Street Journal reports. <em>CNBC</em>.{" "}
+                <RefLink href="https://www.cnbc.com/2021/09/14/facebook-documents-show-how-toxic-instagram-is-for-teens-wsj.html">
+                  cnbc.com
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-nyt-teen-girls-2021">
+                Wells, G. (2021, October 5). Teenage girls say Instagram&rsquo;s mental-health
+                impacts are no surprise. <em>The New York Times</em>.{" "}
+                <RefLink href="https://www.nytimes.com/2021/10/05/technology/teenage-girls-instagram.html">
+                  nytimes.com
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-npr-haugen-2021">
+                Allyn, B. (2021, October 5). Whistleblower&rsquo;s testimony has resurfaced
+                Facebook&rsquo;s Instagram problem. <em>NPR</em>.{" "}
+                <RefLink href="https://www.npr.org/2021/10/05/1043194385/whistleblowers-testimony-facebook-instagram">
+                  npr.org
+                </RefLink>
+                .
+              </Reference>
+            </RefGroup>
+
+            <RefGroup title="§ 03 — rubric, behavioral research">
+              <Reference id="ref-crockett-2017">
+                Crockett, M. J. (2017). Moral outrage in the digital age.{" "}
+                <em>Nature Human Behaviour</em>, 1(11), 769&ndash;771.{" "}
+                <RefLink href="https://doi.org/10.1038/s41562-017-0213-3">
+                  doi:10.1038/s41562-017-0213-3
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-brady-2017">
+                Brady, W. J., Wills, J. A., Jost, J. T., Tucker, J. A., &amp; Van Bavel, J. J.
+                (2017). Emotion shapes the diffusion of moralized content in social networks.{" "}
+                <em>PNAS</em>, 114(28), 7313&ndash;7318.{" "}
+                <RefLink href="https://doi.org/10.1073/pnas.1618923114">
+                  doi:10.1073/pnas.1618923114
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-brady-2021">
+                Brady, W. J., McLoughlin, K., Doan, T. N., &amp; Crockett, M. J. (2021). How social
+                learning amplifies moral outrage expression in online social networks.{" "}
+                <em>Science Advances</em>, 7(33), eabe5641.{" "}
+                <RefLink href="https://doi.org/10.1126/sciadv.abe5641">
+                  doi:10.1126/sciadv.abe5641
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-przybylski-2013">
+                Przybylski, A. K., Murayama, K., DeHaan, C. R., &amp; Gladwell, V. (2013).
+                Motivational, emotional, and behavioral correlates of fear of missing out.{" "}
+                <em>Computers in Human Behavior</em>, 29(4), 1841&ndash;1848.{" "}
+                <RefLink href="https://doi.org/10.1016/j.chb.2013.02.014">
+                  doi:10.1016/j.chb.2013.02.014
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-cialdini-2009">
+                Cialdini, R. B. (2009). <em>Influence: Science and Practice</em> (5th ed.).
+                Pearson.
+              </Reference>
+              <Reference id="ref-meta-2017">
+                Meta Newsroom (2017, December 18). Fighting engagement bait on Facebook.{" "}
+                <RefLink href="https://about.fb.com/news/2017/12/news-feed-fyi-fighting-engagement-bait-on-facebook/">
+                  about.fb.com
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-munger-2020">
+                Munger, K. (2020). All the news that&rsquo;s fit to click: The economics of
+                clickbait media. <em>Political Communication</em>, 37(3), 376&ndash;397.{" "}
+                <RefLink href="https://doi.org/10.1080/10584609.2019.1687626">
+                  doi:10.1080/10584609.2019.1687626
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-mathur-2019">
+                Mathur, A., Acar, G., Friedman, M. J., Lucherini, E., Mayer, J., Chetty, M., &amp;
+                Narayanan, A. (2019). Dark patterns at scale: Findings from a crawl of 11K
+                shopping websites. <em>Proceedings of the ACM on Human-Computer Interaction</em>,
+                3(CSCW).{" "}
+                <RefLink href="https://doi.org/10.1145/3359183">doi:10.1145/3359183</RefLink>.
+              </Reference>
+              <Reference id="ref-small-2007">
+                Small, D. A., Loewenstein, G., &amp; Slovic, P. (2007). Sympathy and callousness:
+                The impact of deliberative thought on donations to identifiable and statistical
+                victims.{" "}
+                <em>Organizational Behavior and Human Decision Processes</em>, 102(2),
+                143&ndash;153.{" "}
+                <RefLink href="https://doi.org/10.1016/j.obhdp.2006.01.005">
+                  doi:10.1016/j.obhdp.2006.01.005
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-kramer-2014">
+                Kramer, A. D. I., Guillory, J. E., &amp; Hancock, J. T. (2014). Experimental
+                evidence of massive-scale emotional contagion through social networks.{" "}
+                <em>PNAS</em>, 111(24), 8788&ndash;8790.{" "}
+                <RefLink href="https://doi.org/10.1073/pnas.1320040111">
+                  doi:10.1073/pnas.1320040111
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-loewenstein-1994">
+                Loewenstein, G. (1994). The psychology of curiosity: A review and reinterpretation.{" "}
+                <em>Psychological Bulletin</em>, 116(1), 75&ndash;98.{" "}
+                <RefLink href="https://doi.org/10.1037/0033-2909.116.1.75">
+                  doi:10.1037/0033-2909.116.1.75
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-blom-hansen-2015">
+                Blom, J. N., &amp; Hansen, K. R. (2015). Click bait: Forward-reference as lure in
+                online news headlines. <em>Journal of Pragmatics</em>, 76, 87&ndash;100.{" "}
+                <RefLink href="https://doi.org/10.1016/j.pragma.2014.11.010">
+                  doi:10.1016/j.pragma.2014.11.010
+                </RefLink>
+                .
+              </Reference>
+              <Reference id="ref-skinner-1953">
+                Skinner, B. F. (1953). <em>Science and Human Behavior</em>. Macmillan.
+              </Reference>
+              <Reference id="ref-alter-2017">
+                Alter, A. (2017). <em>Irresistible: The Rise of Addictive Technology and the
+                Business of Keeping Us Hooked</em>. Penguin Press.
+              </Reference>
+              <Reference id="ref-montag-2019">
+                Montag, C., Lachmann, B., Herrlich, M., &amp; Zweig, K. (2019). Addictive features
+                of social media/messenger platforms and freemium games against the background of
+                psychological and economic theories.{" "}
+                <em>International Journal of Environmental Research and Public Health</em>,
+                16(14), 2612.{" "}
+                <RefLink href="https://doi.org/10.3390/ijerph16142612">
+                  doi:10.3390/ijerph16142612
+                </RefLink>
+                .
+              </Reference>
+            </RefGroup>
+
+            <RefGroup title="§ 04&ndash;05 — machine learning">
+              <Reference id="ref-bai-2022">
+                Bai, Y., Kadavath, S., Kundu, S., et al. (2022). Constitutional AI: Harmlessness
+                from AI Feedback. <em>arXiv:2212.08073</em>.{" "}
+                <RefLink href="https://arxiv.org/abs/2212.08073">arxiv.org/abs/2212.08073</RefLink>
+                .
+              </Reference>
+              <Reference id="ref-zheng-2023">
+                Zheng, L., Chiang, W.-L., Sheng, Y., et al. (2023). Judging LLM-as-a-Judge with
+                MT-Bench and Chatbot Arena.{" "}
+                <em>NeurIPS Datasets and Benchmarks Track</em>.{" "}
+                <RefLink href="https://arxiv.org/abs/2306.05685">arxiv.org/abs/2306.05685</RefLink>
+                .
+              </Reference>
+              <Reference id="ref-sanh-2019">
+                Sanh, V., Debut, L., Chaumond, J., &amp; Wolf, T. (2019). DistilBERT, a distilled
+                version of BERT: smaller, faster, cheaper and lighter.{" "}
+                <em>NeurIPS EMC&sup2; Workshop</em>.{" "}
+                <RefLink href="https://arxiv.org/abs/1910.01108">arxiv.org/abs/1910.01108</RefLink>
+                .
+              </Reference>
+            </RefGroup>
+          </div>
+        </AboutSection>
+
+        <footer className="mt-6 flex flex-col gap-3 border-t border-white/5 pt-10 text-[13px] leading-[1.6] text-zinc-500">
+          <p>
+            LUCID is a research and education tool. Scores are statistical estimates based on a
+            rubric grounded in peer-reviewed behavioral research, not a measurement of intent.
+          </p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.24em]">
+            built for Duke DL · 2026 · lindsay gross
+          </p>
+        </footer>
       </article>
     </main>
+  );
+}
+
+function RefGroup({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <h3 className="font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-400">{title}</h3>
+      <ul className="flex flex-col gap-3">{children}</ul>
+    </div>
+  );
+}
+
+function Reference({ id, children }: { id: string; children: React.ReactNode }) {
+  return (
+    <li
+      id={id}
+      className="scroll-mt-20 text-[14px] leading-[1.6] text-zinc-300 target:text-white target:bg-white/[0.04] target:-mx-2 target:px-2 target:py-1 target:rounded-md"
+    >
+      {children}
+    </li>
+  );
+}
+
+function RefLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="break-words font-mono text-[12px] text-zinc-400 underline decoration-white/20 decoration-dotted underline-offset-4 transition-colors hover:decoration-white/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+    >
+      {children}
+    </a>
   );
 }
