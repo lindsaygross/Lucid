@@ -50,10 +50,18 @@ def _extract_audio(video_path: Path) -> Path:
     return audio_path
 
 
+def _is_credible_key(key: str | None) -> bool:
+    """Treat placeholder keys (e.g., 'sk-...' from .env.example) as missing."""
+    if not key:
+        return False
+    key = key.strip()
+    return len(key) >= 20 and "..." not in key
+
+
 def _transcribe_audio(audio_path: Path) -> str:
     """Dispatch to API or local Whisper based on config."""
     settings = get_settings()
-    if settings.openai_api_key:
+    if _is_credible_key(settings.openai_api_key):
         return _transcribe_openai(audio_path, api_key=settings.openai_api_key)
     return _transcribe_local(audio_path, model_name=settings.whisper_local_model)
 
