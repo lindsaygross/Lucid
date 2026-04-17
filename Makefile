@@ -6,12 +6,14 @@ help:
 	@echo "Setup:"
 	@echo "  make install         Install Python dependencies"
 	@echo ""
-	@echo "Data pipeline:"
+	@echo "Data pipeline (run in order):"
 	@echo "  make data            Scrape Reddit + fetch Webis + Stop Clickbait + TikTok samples"
-	@echo "  make label           Run Claude labeling pipeline on full corpus"
+	@echo "  make corpus          Merge all sources into data/processed/corpus.csv"
+	@echo "  make label           Run Claude labeling pipeline on corpus"
 	@echo "  make gold-set        Launch Gradio labeler for 100-post human validation"
 	@echo "  make agreement       Compute inter-annotator agreement (Claude vs Lindsay)"
-	@echo "  make features        Build features for classical model"
+	@echo "  make splits          Build stratified train/val/test splits"
+	@echo "  make cache-gallery   Pre-run analysis on gallery TikToks (post-training)"
 	@echo ""
 	@echo "Training + eval:"
 	@echo "  make train-naive     Train naive keyword baseline"
@@ -35,6 +37,9 @@ data:
 	python -m scripts.scrape_reddit
 	python -m scripts.scrape_tiktok
 
+corpus:
+	python -m scripts.build_corpus
+
 label:
 	python -m scripts.label_with_claude
 
@@ -44,8 +49,11 @@ gold-set:
 agreement:
 	python -m scripts.agreement_stats
 
-features:
-	python -m scripts.build_features
+splits:
+	python -m scripts.splits
+
+cache-gallery:
+	python -m scripts.cache_gallery
 
 train-naive:
 	python -m scripts.train_naive
