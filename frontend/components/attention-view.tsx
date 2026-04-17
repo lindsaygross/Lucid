@@ -66,7 +66,8 @@ export function AttentionView({ text }: AttentionViewProps) {
 
       <div className="flex flex-wrap gap-2">
         {DIMENSIONS.map((d) => {
-          const dimScore = Math.round((data?.dimension_scores?.[d.key] ?? 0) * 100);
+          const rawScore = data?.dimension_scores?.[d.key] ?? 0;
+          const dimScore = rawScore >= 0.01 ? rawScore.toFixed(2) : rawScore.toFixed(3);
           const isActive = d.key === active;
           return (
             <button

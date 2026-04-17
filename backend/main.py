@@ -98,6 +98,21 @@ class AnalyzeRequest(BaseModel):
     )
 
 
+@app.on_event("startup")
+def _warm_models() -> None:
+    """Eagerly load the deep model so the first user request isn't a cold start.
+
+    DistilBERT pulls ~266 MB from HF Hub and takes several seconds to load into
+    RAM. Doing that at boot time instead of on first request makes /analyze and
+    /analyze/compare feel instantaneous instead of hanging for 30-60s.
+    """
+    try:
+        get_router()._get("deep")
+        logger.info("deep model warmed at startup")
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("could not warm deep model at startup: %s", exc)
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     """Kubernetes-style liveness probe."""
