@@ -37,6 +37,19 @@ data:
 	python -m scripts.scrape_reddit
 	python -m scripts.scrape_tiktok
 
+data-no-reddit:
+	python -m scripts.fetch_datasets
+	python -m scripts.scrape_tiktok
+
+fetch-datasets:
+	python -m scripts.fetch_datasets
+
+scrape-reddit:
+	python -m scripts.scrape_reddit
+
+scrape-tiktok:
+	python -m scripts.scrape_tiktok
+
 corpus:
 	python -m scripts.build_corpus
 
