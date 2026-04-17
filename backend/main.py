@@ -35,9 +35,26 @@ app = FastAPI(
     version="0.1.0",
 )
 
+_default_origins = [
+    "https://lucid-seven-pied.vercel.app",
+    "https://lucid-git-main-lindsay-gross-projects.vercel.app",
+]
+_extra = os.getenv("LUCID_CORS_EXTRA_ORIGINS", "")
+if _extra:
+    _default_origins.extend([o.strip() for o in _extra.split(",") if o.strip()])
+_allow_origins: list[str] | str
+if os.getenv("LUCID_CORS_ALLOW_ALL") == "1":
+    _allow_origins = ["*"]
+else:
+    _allow_origins = _default_origins + [
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tightened via FRONTEND_URL in production
+    allow_origins=_allow_origins,
+    allow_origin_regex=r"https://lucid-[a-z0-9]+-lindsay-gross-projects\.vercel\.app",
     allow_credentials=True,
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
@@ -114,6 +131,115 @@ def analyze(req: AnalyzeRequest) -> dict:
     except Exception as exc:  # noqa: BLE001
         logger.exception("analyze failed")
         raise HTTPException(500, f"Analysis failed: {exc}") from exc
+
+
+class CompareRequest(BaseModel):
+    """Input for POST /analyze/compare — scores one text across all 3 models."""
+
+    text: str = Field(..., min_length=1, description="Text to score across all 3 models")
+
+
+@app.post("/analyze/compare")
+def analyze_compare(req: CompareRequest) -> dict:
+    """Score the same text with naive + classical + deep and return all three.
+
+    Used by the frontend's live-compare mode to demonstrate the F1 / MAE /
+    calibration differences at inference time. Deep model pulls from HF Hub
+    on first call, then stays warm in memory.
+    """
+    from backend.inference.naive import NaivePredictor
+
+    text = req.text.strip()
+    settings = get_settings()
+    out: dict[str, dict] = {"text": text, "predictions": {}}
+
+    # Naive — always available
+    try:
+        naive = NaivePredictor()
+        p = naive.predict(text)
+        out["predictions"]["naive"] = {
+            "scroll_trap_score": p.scroll_trap_score,
+            "dimension_scores": p.dimension_scores,
+            "dimension_present": p.dimension_present,
+        }
+    except Exception as exc:  # noqa: BLE001
+        out["predictions"]["naive"] = {"error": str(exc)}
+
+    # Classical
+    try:
+        from backend.inference.classical import ClassicalPredictor
+        classical = ClassicalPredictor(REPO_ROOT / "models" / "classical.pkl")
+        p = classical.predict(text)
+        out["predictions"]["classical"] = {
+            "scroll_trap_score": p.scroll_trap_score,
+            "dimension_scores": p.dimension_scores,
+            "dimension_present": p.dimension_present,
+        }
+    except Exception as exc:  # noqa: BLE001
+        out["predictions"]["classical"] = {"error": str(exc)}
+
+    # Deep
+    try:
+        from backend.inference.deep import DeepPredictor
+        deep = DeepPredictor(
+            model_dir=str(REPO_ROOT / "models" / "distilbert"),
+            hf_repo=settings.hf_repo,
+        )
+        p = deep.predict(text)
+        out["predictions"]["deep"] = {
+            "scroll_trap_score": p.scroll_trap_score,
+            "dimension_scores": p.dimension_scores,
+            "dimension_present": p.dimension_present,
+        }
+    except Exception as exc:  # noqa: BLE001
+        out["predictions"]["deep"] = {"error": str(exc)}
+
+    return out
+
+
+class ExplainRequest(BaseModel):
+    """Input for POST /analyze/explain — per-dimension token attributions."""
+
+    text: str = Field(..., min_length=1)
+    top_k: int = Field(default=8, ge=1, le=30)
+
+
+@app.post("/analyze/explain")
+def analyze_explain(req: ExplainRequest) -> dict:
+    """Per-dimension Integrated Gradients attributions over input tokens.
+
+    For each of the 6 manipulation dimensions, returns the top-k tokens that
+    most push the model's pre-sigmoid logit toward (positive attribution) or
+    away from (negative) "this tactic is present." Uses a PAD-token baseline
+    with 24-step midpoint Riemann sum (Sundararajan, Taly, Yan 2017).
+
+    Response:
+      {
+        "text": "...",
+        "scroll_trap_score": int,
+        "dimension_scores": {dim: float, ...},
+        "dimension_tokens": {dim: [{"token", "position", "attribution"}], ...}
+      }
+    """
+    from backend.inference.deep import DeepPredictor
+
+    settings = get_settings()
+    try:
+        deep = DeepPredictor(
+            model_dir=str(REPO_ROOT / "models" / "distilbert"),
+            hf_repo=settings.hf_repo,
+        )
+        pred, per_dim = deep.explain(req.text.strip(), top_k=req.top_k)
+        return {
+            "text": req.text.strip(),
+            "scroll_trap_score": pred.scroll_trap_score,
+            "dimension_scores": pred.dimension_scores,
+            "dimension_present": pred.dimension_present,
+            "dimension_tokens": per_dim,
+        }
+    except Exception as exc:  # noqa: BLE001
+        logger.exception("explain failed")
+        raise HTTPException(500, f"Explain failed: {exc}") from exc
 
 
 @app.get("/gallery")

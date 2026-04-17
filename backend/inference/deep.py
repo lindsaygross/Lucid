@@ -133,3 +133,101 @@ class DeepPredictor:
         # severity intuition. The trained composite head's metrics still live
         # in the report as an honest accounting of what the model learned.
         return Prediction.from_dimension_scores(dim_scores)
+
+    def explain(
+        self,
+        text: str,
+        max_length: int = 256,
+        top_k: int = 10,
+        ig_steps: int = 24,
+    ) -> tuple[Prediction, dict[str, list[dict]]]:
+        """Predict + per-dimension token-level Integrated Gradients attributions.
+
+        For each of the 6 dimension logits, integrates the gradient of the
+        pre-sigmoid logit with respect to input token embeddings along a
+        straight-line path from an all-[PAD] baseline to the actual input
+        (Sundararajan, Taly, Yan 2017). Returns signed attributions summed
+        over the hidden dimension; positive values push the dimension
+        toward "fire", negative toward absent.
+
+        This is qualitatively sharper than attention rollout because it is
+        (a) per-dimension rather than global, and (b) reflects actual causal
+        contribution to each head's score, not just attention traffic.
+
+        Returns:
+          (Prediction, {dim: [{token, position, attribution}, ...]})
+        """
+        self.model.eval()
+        enc = self.tokenizer(
+            text,
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+            padding=True,
+        )
+        input_ids = enc["input_ids"].to(self.device)
+        attention_mask = enc["attention_mask"].to(self.device)
+
+        embedding_layer = self.model.encoder.get_input_embeddings()
+        with torch.no_grad():
+            input_embeds = embedding_layer(input_ids)
+            pad_id = self.tokenizer.pad_token_id or 0
+            baseline_ids = torch.full_like(input_ids, pad_id)
+            baseline_embeds = embedding_layer(baseline_ids)
+
+        def _forward(embeds: torch.Tensor) -> torch.Tensor:
+            """Encoder + dim head from given embeddings -> [1, 6] pre-sigmoid logits."""
+            enc_out = self.model.encoder(
+                inputs_embeds=embeds, attention_mask=attention_mask
+            )
+            cls = enc_out.last_hidden_state[:, 0]
+            cls = self.model.dropout(cls)
+            return self.model.dimension_head(cls)
+
+        # Deterministic prediction we'll return alongside attributions
+        with torch.no_grad():
+            dim_logits = _forward(input_embeds)
+            dim_probs = torch.sigmoid(dim_logits)[0].cpu().tolist()
+            dim_scores = {dim: float(p) for dim, p in zip(DIMENSIONS, dim_probs)}
+            pred = Prediction.from_dimension_scores(dim_scores)
+
+        # Integrated Gradients: midpoint-rule Riemann sum over alpha in [0, 1]
+        delta = input_embeds - baseline_embeds  # [1, seq, hidden]
+        accum = torch.zeros(
+            len(DIMENSIONS), *input_embeds.shape, device=self.device
+        )
+        for step in range(ig_steps):
+            alpha = (step + 0.5) / ig_steps
+            interp = (baseline_embeds + alpha * delta).detach().requires_grad_(True)
+            logits = _forward(interp)  # [1, 6]
+            for i in range(len(DIMENSIONS)):
+                grad = torch.autograd.grad(
+                    outputs=logits[0, i],
+                    inputs=interp,
+                    retain_graph=(i < len(DIMENSIONS) - 1),
+                )[0]
+                accum[i] += grad.detach()
+
+        accum /= ig_steps
+        attributions = accum * delta  # [6, 1, seq, hidden]
+        token_attr = attributions.sum(dim=-1).squeeze(1)  # [6, seq]
+
+        ids = input_ids[0].cpu().tolist()
+        tokens = self.tokenizer.convert_ids_to_tokens(ids)
+
+        per_dim: dict[str, list[dict]] = {}
+        for i, dim in enumerate(DIMENSIONS):
+            scores = token_attr[i].cpu().tolist()
+            candidates: list[dict] = []
+            for pos, (tok, s) in enumerate(zip(tokens, scores)):
+                if tok in ("[CLS]", "[SEP]", "[PAD]"):
+                    continue
+                candidates.append({
+                    "token": tok.replace("##", ""),
+                    "position": pos,
+                    "attribution": float(s),
+                })
+            candidates.sort(key=lambda r: abs(r["attribution"]), reverse=True)
+            per_dim[dim] = candidates[:top_k]
+
+        return pred, per_dim
