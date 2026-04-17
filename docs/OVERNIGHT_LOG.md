@@ -117,3 +117,51 @@ both once trained on Colab.
 committed `models/classical.pkl` so the backend can serve it locally
 right now (router → classical → naive fallback chain).
 
+
+## Summary for the morning
+
+Pushed commits (newest → oldest, all on `claude/plan-dl-project-1Reh0`):
+
+1. `training: splits fix + naive + classical models + metrics`
+2. `docs: note hand-rolled Aceternity components vs magic MCP`
+3. `backend: transcribe gracefully handles missing whisper in prod`
+4. `frontend: LucidLogo typography fix + .env.local example`
+5. `deploy: Railway prod uses naive-only + slim requirements-prod.txt`
+6. `frontend: Observatory landing — hero, analyzer, results, wait state`
+7. `data: fix Stop Clickbait URL (now .gz), decompress inline`
+8. `frontend: scaffold Next.js 16 app (TS, Tailwind, App Router)`
+
+### What works right now
+- `python3 -m uvicorn app:app --reload` on port 8000 (naive+classical
+  models load, deep fallbacks to classical cleanly)
+- `cd frontend && npm run dev` on port 3000, points at
+  NEXT_PUBLIC_API_URL (defaults to localhost:8000)
+- POST /analyze with `{"text":"..."}` → full Score + dimension scoring +
+  Claude rewrite
+- POST /analyze with `{"url":"...tiktok..."}` → download + Whisper API
+  transcription (needs real OPENAI_API_KEY in .env) or local whisper
+  (slow) + Claude Vision + score + rewrite
+
+### Two things you should do first thing
+1. **Fix OPENAI_API_KEY in `.env`** — currently the placeholder
+   `sk-...`. Without it, local transcripts fall back to openai-whisper
+   (base model, ~140MB download, ~10-20s per clip on CPU).
+2. **Set Railway env vars**: `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`.
+   `LUCID_PREFERRED_MODEL` already comes in as `naive` from
+   nixpacks.toml. CORS currently allows `*` — tighten to your Vercel
+   frontend URL before demo day.
+
+### Known incomplete / deferred
+- `/gallery` endpoint lives but no cached items yet (run
+  `make cache-gallery` after deep model trained).
+- Frontend "Try these" tiles are gradient placeholders — the actual
+  TikTok thumbnail + cached-analysis wiring is the last-mile of the
+  gallery work.
+- Reddit scrape skipped (no creds — PLAN.md already says this is
+  optional; 500 in-domain posts would be a nice report anecdote but not
+  load-bearing).
+- Deep model: untrained. `models/distilbert/` empty → router falls back
+  to classical. Colab notebook is ready in `notebooks/train_lucid.ipynb`.
+- One label dropped: `stop_dca0c3814c26` (Claude couldn't produce valid
+  JSON in 3 tries).
+
