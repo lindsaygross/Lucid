@@ -10,6 +10,7 @@ Run: python -m scripts.fetch_datasets
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import logging
 import zipfile
@@ -27,11 +28,11 @@ logger = logging.getLogger(__name__)
 STOP_CLICKBAIT_URLS = {
     "clickbait": (
         "https://raw.githubusercontent.com/bhargaviparanjape/clickbait/"
-        "master/dataset/clickbait_data"
+        "master/dataset/clickbait_data.gz"
     ),
     "non_clickbait": (
         "https://raw.githubusercontent.com/bhargaviparanjape/clickbait/"
-        "master/dataset/non_clickbait_data"
+        "master/dataset/non_clickbait_data.gz"
     ),
 }
 
@@ -41,10 +42,11 @@ def fetch_stop_clickbait(output_path: Path) -> None:
     rows: list[dict] = []
     for label, url in STOP_CLICKBAIT_URLS.items():
         logger.info("fetching %s", url)
-        r = requests.get(url, timeout=30)
+        r = requests.get(url, timeout=60)
         r.raise_for_status()
         score = 1.0 if label == "clickbait" else 0.0
-        for line in r.text.splitlines():
+        text = gzip.decompress(r.content).decode("utf-8", errors="replace")
+        for line in text.splitlines():
             line = line.strip()
             if line:
                 rows.append({"text": line, "clickbait_score": score, "source": "stop_clickbait_2016"})
