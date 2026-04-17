@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     whisper_local_model: str = "base"
 
     # Pipeline limits
-    max_video_duration_seconds: int = 180
+    max_video_duration_seconds: int = 600
     num_vision_keyframes: int = 4
 
 
