@@ -194,7 +194,7 @@ export default function AboutPage() {
                 className="flex flex-col gap-2 rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-colors hover:border-white/10"
                 style={{ borderLeftColor: d.color, borderLeftWidth: "3px" }}
               >
-                <div className="flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                   <span className="font-heading text-[15px] font-semibold text-white sm:text-base">
                     {String(i + 1).padStart(2, "0")} &middot; {d.label}
                   </span>
