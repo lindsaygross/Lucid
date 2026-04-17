@@ -143,56 +143,24 @@ class CompareRequest(BaseModel):
 def analyze_compare(req: CompareRequest) -> dict:
     """Score the same text with naive + classical + deep and return all three.
 
-    Used by the frontend's live-compare mode to demonstrate the F1 / MAE /
-    calibration differences at inference time. Deep model pulls from HF Hub
-    on first call, then stays warm in memory.
+    Reuses the router's cached predictor instances so we never hold two copies
+    of DistilBERT in memory (Railway's small containers OOM fast otherwise).
     """
-    from backend.inference.naive import NaivePredictor
-
     text = req.text.strip()
-    settings = get_settings()
+    router = get_router()
     out: dict[str, dict] = {"text": text, "predictions": {}}
 
-    # Naive — always available
-    try:
-        naive = NaivePredictor()
-        p = naive.predict(text)
-        out["predictions"]["naive"] = {
-            "scroll_trap_score": p.scroll_trap_score,
-            "dimension_scores": p.dimension_scores,
-            "dimension_present": p.dimension_present,
-        }
-    except Exception as exc:  # noqa: BLE001
-        out["predictions"]["naive"] = {"error": str(exc)}
-
-    # Classical
-    try:
-        from backend.inference.classical import ClassicalPredictor
-        classical = ClassicalPredictor(REPO_ROOT / "models" / "classical.pkl")
-        p = classical.predict(text)
-        out["predictions"]["classical"] = {
-            "scroll_trap_score": p.scroll_trap_score,
-            "dimension_scores": p.dimension_scores,
-            "dimension_present": p.dimension_present,
-        }
-    except Exception as exc:  # noqa: BLE001
-        out["predictions"]["classical"] = {"error": str(exc)}
-
-    # Deep
-    try:
-        from backend.inference.deep import DeepPredictor
-        deep = DeepPredictor(
-            model_dir=str(REPO_ROOT / "models" / "distilbert"),
-            hf_repo=settings.hf_repo,
-        )
-        p = deep.predict(text)
-        out["predictions"]["deep"] = {
-            "scroll_trap_score": p.scroll_trap_score,
-            "dimension_scores": p.dimension_scores,
-            "dimension_present": p.dimension_present,
-        }
-    except Exception as exc:  # noqa: BLE001
-        out["predictions"]["deep"] = {"error": str(exc)}
+    for name in ("naive", "classical", "deep"):
+        try:
+            model = router._get(name)
+            p = model.predict(text)
+            out["predictions"][name] = {
+                "scroll_trap_score": p.scroll_trap_score,
+                "dimension_scores": p.dimension_scores,
+                "dimension_present": p.dimension_present,
+            }
+        except Exception as exc:  # noqa: BLE001
+            out["predictions"][name] = {"error": str(exc)}
 
     return out
 
@@ -221,14 +189,8 @@ def analyze_explain(req: ExplainRequest) -> dict:
         "dimension_tokens": {dim: [{"token", "position", "attribution"}], ...}
       }
     """
-    from backend.inference.deep import DeepPredictor
-
-    settings = get_settings()
     try:
-        deep = DeepPredictor(
-            model_dir=str(REPO_ROOT / "models" / "distilbert"),
-            hf_repo=settings.hf_repo,
-        )
+        deep = get_router()._get("deep")
         pred, per_dim = deep.explain(req.text.strip(), top_k=req.top_k)
         return {
             "text": req.text.strip(),
