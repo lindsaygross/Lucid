@@ -170,6 +170,166 @@ export default function AboutPage() {
             on one side.
           </p>
         </AboutSection>
+
+        <AboutSection
+          id="rubric"
+          eyebrow="§ 03 — the six dimensions"
+          heading="How the rubric was built, and why it has six axes rather than one."
+        >
+          <p>
+            The rubric is the part of the project I took most seriously. A score is only as
+            meaningful as the taxonomy underneath it, and a single &ldquo;manipulation score&rdquo;
+            collapses distinctions that matter. Outrage bait and a curiosity gap both raise
+            engagement, but they do it by pressing on entirely different cognitive mechanisms, and
+            a viewer who can name which lever a post is pulling is in a different relationship to
+            the post than one who can&rsquo;t. So LUCID scores six dimensions, each of which traces
+            to at least one established line of behavioral research.
+          </p>
+
+          <ol className="flex flex-col gap-3">
+            {DIMENSIONS.map((d, i) => (
+              <li
+                key={d.key}
+                className="flex flex-col gap-2 rounded-xl border border-white/5 bg-white/[0.02] p-4 transition-colors hover:border-white/10"
+                style={{ borderLeftColor: d.color, borderLeftWidth: "3px" }}
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <span className="font-heading text-[15px] font-semibold text-white sm:text-base">
+                    {String(i + 1).padStart(2, "0")} &middot; {d.label}
+                  </span>
+                  <span
+                    className="font-mono text-[10px] uppercase tracking-[0.24em]"
+                    style={{ color: d.color }}
+                  >
+                    dim.{d.key}
+                  </span>
+                </div>
+                <p className="text-[15px] leading-[1.55] text-zinc-300 sm:text-[15.5px]">
+                  {d.oneLiner}
+                </p>
+                <p className="font-mono text-[11px] leading-[1.5] text-zinc-500">
+                  <Cite href={d.citeHref}>{d.citeText}</Cite>
+                </p>
+              </li>
+            ))}
+          </ol>
+
+          <p>
+            Two design choices in the scoring that I want to be explicit about.
+          </p>
+          <p>
+            <strong className="text-white">The severity scale is ordinal, not binary.</strong> Each
+            dimension is scored 0 / 1 / 2 — absent, moderate, severe — and the composite Scroll
+            Trap Score is a 0&ndash;100 aggregation of the six. Manipulation is gradient; a post
+            using a single mild outrage hook is doing something qualitatively different from one
+            stacking outrage, scarcity, and guilt in the same ten seconds. Binary labels would
+            hide that. Three levels are coarse enough to be teachable to both a human labeler and
+            a language-model judge, and fine enough to distinguish rhetorical intensity.
+          </p>
+          <p>
+            <strong className="text-white">The score is a property of the text, not of the
+              creator.</strong>{" "}
+            LUCID evaluates what the post is <em>doing</em> at the level of fused caption, audio
+            transcript, and on-screen overlay. It does not claim to measure intent, and it
+            doesn&rsquo;t try to. A nonprofit using emotional appeals to recruit foster parents and
+            a grifter using the same techniques for an info-product will both score high on
+            Emotional Manipulation, because the rhetorical move is the same on the page. The
+            judgment about intent is the reader&rsquo;s. This distinction matters enough to state
+            plainly, and it&rsquo;s repeated in the footer of the main app.
+          </p>
+          <p>
+            Finally, a note on why the rubric is fixed rather than learned. A clustering approach
+            would surface whatever structure the data happens to have; a fixed rubric commits up
+            front to a set of categories that are defensible to a non-ML reader. For a tool
+            intended to help people articulate what a post is doing to them, the second property
+            matters more. The taxonomy is one defensible cut of the space, not the only one —
+            §<a href="#ethics" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">06</a>{" "}
+            says so.
+          </p>
+        </AboutSection>
+
+        <AboutSection
+          id="labels"
+          eyebrow="§ 04 — how the labels were made"
+          heading="And why, at some point, I sat down and hand-labeled a hundred of them myself."
+        >
+          <p>
+            The deployed model is a fine-tuned DistilBERT, which is a small (66M-parameter) encoder
+            transformer. It needs labeled training data in its target format. The issue is that no
+            one has ever labeled three and a half thousand short-form-video captions on a
+            six-dimension ordinal rubric that I made up — the data doesn&rsquo;t exist.
+          </p>
+          <p>
+            The pragmatic solution is what the literature has started calling{" "}
+            <em>LLM-as-a-judge</em>. Claude Sonnet 4.5 is given the full rubric — the one in{" "}
+            <Link href="/#" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">
+              §03 above
+            </Link>{" "}
+            — along with eight few-shot examples spanning 0 / 1 / 2 severity per dimension, and it
+            labels every item in the training corpus. DistilBERT is then trained on those labels.
+            The framing is borrowed from Anthropic&rsquo;s{" "}
+            <Cite href="#ref-bai-2022">Constitutional AI</Cite> work and formalized for evaluation
+            use by <Cite href="#ref-zheng-2023">Zheng et al. (2023)</Cite> on MT-Bench. The idea,
+            in plain terms: a larger language model trained on human-written principles can act as
+            a consistent labeler at scale for a smaller model to learn from.
+          </p>
+          <p>
+            The honest worry about this approach is that it&rsquo;s circular. You defined
+            manipulation one way; you gave that definition to an LLM; the LLM produced labels that
+            reflect your definition; a model trained on those labels ends up saying what you
+            already believed. If all you do is train and ship, you&rsquo;re not measuring anything
+            about the world — you&rsquo;re measuring the consistency of your own rubric applied by
+            a proxy.
+          </p>
+          <p>
+            The way out is to treat the Claude labels as a noisy oracle, not ground truth, and to
+            calibrate them against something external. Which is why I spent a long weekend
+            hand-labeling 100 items sampled from the corpus with a fixed seed of 42, through a
+            small Gradio interface I built for the purpose. Same rubric, same severity levels, no
+            Claude output visible during labeling. The point of the exercise is not that one
+            person&rsquo;s labels are the truth. The point is that if you&rsquo;re going to build a
+            labeling pipeline at scale, you need to do the labeling yourself at least once, on a
+            representative sample, and see whether the pipeline agrees with you in places that are
+            easy and disagrees with you in places that are hard. Otherwise you don&rsquo;t actually
+            know what you shipped.
+          </p>
+          <p>
+            The metrics that come out of that comparison are per-dimension{" "}
+            <strong className="text-white">Spearman rank correlation</strong> (how well the two
+            labelers order severity) and{" "}
+            <strong className="text-white">Krippendorff&rsquo;s &alpha;</strong> (an ordinal
+            agreement coefficient). Strong agreement on Dopamine Design or Engagement Bait would
+            not be surprising — those dimensions have unambiguous surface cues. Weaker agreement
+            on Emotional Manipulation would also not be surprising, because the call between a
+            genuine emotional appeal and a coercive one is genuinely hard. The report will publish
+            whatever comes out, strong or weak.
+          </p>
+          <p className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4 text-[15px] leading-[1.6] text-zinc-400">
+            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-zinc-500">
+              placeholder · agreement table
+            </span>
+            <br />
+            Per-dimension Spearman &rho; and Krippendorff&rsquo;s &alpha; will land here once the
+            gold-set pass is complete. I am deliberately not filling in numbers before the
+            labeling finishes.
+          </p>
+          <p className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4 text-[15px] leading-[1.6] text-zinc-400">
+            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-zinc-500">
+              [Lindsay to fill in: which dimensions felt hardest to label and why]
+            </span>
+            <br />
+            A short paragraph from me, after labeling, about which axes were easiest to call
+            confidently and which kept me second-guessing. Leaving this here so I remember to
+            write it in my own words rather than retrofitting something tidy after the fact.
+          </p>
+          <p>
+            The broader point: the fact that LUCID&rsquo;s labels come from a language model is
+            not something to hide. It&rsquo;s a scalable-oversight move with a known failure mode,
+            and the human-validation pass is the thing that makes the move defensible rather than
+            sloppy. If the agreement numbers come back weak on some dimension, that&rsquo;s useful
+            information — it tells me which part of the rubric needs to be tightened or dropped.
+          </p>
+        </AboutSection>
       </article>
     </main>
   );
