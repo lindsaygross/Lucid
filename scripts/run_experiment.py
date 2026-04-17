@@ -126,6 +126,8 @@ def experiment_noise(labeled_csv: Path, corpus_csv: Path, out_dir: Path, sample_
     rng = random.Random(7)
 
     labeled = pd.read_csv(labeled_csv)
+    if "text" in labeled.columns:
+        labeled = labeled.drop(columns=["text"])
     corpus = pd.read_csv(corpus_csv)[["id", "text"]]
     df = labeled.merge(corpus, on="id", how="left").dropna(subset=["text"])
     df = df.sample(n=min(sample_n, len(df)), random_state=7).reset_index(drop=True)

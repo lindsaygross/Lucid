@@ -59,24 +59,29 @@ def load_existing(output_path: Path) -> dict[str, dict[str, int]]:
     return labels
 
 
-def save_all(output_path: Path, items: pd.DataFrame, labels: dict[str, dict[str, int]]) -> None:
-    """Write all completed labels to CSV."""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    with output_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=["id", "text", *DIMENSIONS])
-        writer.writeheader()
-        for _, row in items.iterrows():
-            if row["id"] not in labels:
-                continue
-            lab = labels[row["id"]]
-            writer.writerow({
-                "id": row["id"],
-                "text": row["text"],
-                **{d: lab.get(d, 0) for d in DIMENSIONS},
-            })
+def save_all(
+    output_paths: list[Path],
+    items: pd.DataFrame,
+    labels: dict[str, dict[str, int]],
+) -> None:
+    """Write all completed labels to every path in output_paths."""
+    for output_path in output_paths:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        with output_path.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["id", "text", *DIMENSIONS])
+            writer.writeheader()
+            for _, row in items.iterrows():
+                if row["id"] not in labels:
+                    continue
+                lab = labels[row["id"]]
+                writer.writerow({
+                    "id": row["id"],
+                    "text": row["text"],
+                    **{d: lab.get(d, 0) for d in DIMENSIONS},
+                })
 
 
-def build_app(items: pd.DataFrame, labels: dict[str, dict[str, int]], output_path: Path) -> gr.Blocks:
+def build_app(items: pd.DataFrame, labels: dict[str, dict[str, int]], output_paths: list[Path]) -> gr.Blocks:
     """Build the Gradio interface."""
     state = {"idx": 0}
     # Jump to first unlabeled
@@ -102,7 +107,7 @@ def build_app(items: pd.DataFrame, labels: dict[str, dict[str, int]], output_pat
     ) -> tuple:
         row = items.iloc[idx]
         labels[row["id"]] = {d: int(s) for d, s in zip(DIMENSIONS, scores)}
-        save_all(output_path, items, labels)
+        save_all(output_paths, items, labels)
         state["idx"] = min(idx + 1, len(items) - 1)
         return render(state["idx"])
 
@@ -119,12 +124,11 @@ def build_app(items: pd.DataFrame, labels: dict[str, dict[str, int]], output_pat
         header = gr.Markdown()
         text_box = gr.Textbox(label="Post text", lines=8, interactive=False)
         sliders = [
-            gr.Slider(
-                minimum=0,
-                maximum=2,
-                step=1,
+            gr.Radio(
+                choices=[("0 — absent", 0), ("1 — moderate", 1), ("2 — severe", 2)],
                 value=0,
                 label=DIM_DESCRIPTIONS[d],
+                type="value",
             )
             for d in DIMENSIONS
         ]
@@ -163,6 +167,15 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--corpus", type=Path, default=PROCESSED_DIR / "corpus.csv")
     parser.add_argument("--output", type=Path, default=PROCESSED_DIR / "gold_labels.csv")
+    parser.add_argument(
+        "--backup",
+        type=Path,
+        action="append",
+        default=None,
+        help="Optional extra path(s) to mirror the labels CSV to on every save. "
+        "Pass multiple times for multiple backups "
+        "(e.g. --backup ~/Desktop/lucid_labels_backup.csv).",
+    )
     parser.add_argument("--n", type=int, default=100)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--port", type=int, default=7860)
@@ -180,7 +193,13 @@ def main() -> None:
     labels = load_existing(args.output)
     logger.info("gold set: %d items, %d already labeled", len(items), len(labels))
 
-    app = build_app(items, labels, args.output)
+    output_paths: list[Path] = [args.output.expanduser()]
+    if args.backup:
+        for b in args.backup:
+            output_paths.append(b.expanduser())
+    logger.info("saving labels to: %s", ", ".join(str(p) for p in output_paths))
+
+    app = build_app(items, labels, output_paths)
     app.launch(server_port=args.port)
 
 
