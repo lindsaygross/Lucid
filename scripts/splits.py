@@ -82,6 +82,9 @@ def load_split(
     """Load the saved split as three DataFrames joined with corpus text."""
     labeled = pd.read_csv(labeled_csv)
     corpus = pd.read_csv(corpus_csv)[["id", "text", "source", "extra_json"]]
+    # labeled also has a "text" column — keep the corpus copy as canonical
+    # (normalized) and drop labeled's before the merge to avoid text_x/text_y.
+    labeled = labeled.drop(columns=["text"], errors="ignore")
     df = labeled.merge(corpus, on="id", how="left")
     df = df[df["text"].notna()].reset_index(drop=True)
 

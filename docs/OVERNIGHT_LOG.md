@@ -81,3 +81,39 @@ Components implemented:
 - `floating-paths.tsx` — 36 animated SVG paths, framer-motion
 - `falling-pattern.tsx` — unicode glyph rain, colored by dimension palette
 
+
+## [03:34] Training + eval pipeline (CPU models only)
+
+Labeling finished after ~2.5 hours: 3527 / 3528 rows labeled. One Stop
+Clickbait row (`stop_dca0c3814c26`) gave up after 3 JSON-parse retries —
+dropped on the floor, not worth re-running.
+
+Fix: `scripts.splits.load_split` was merging labeled + corpus on `id`
+without dropping labeled's `text`, leaving `text_x`/`text_y` that broke
+all three trainers. Fixed by dropping labeled's text pre-merge so the
+corpus (normalized) copy is canonical.
+
+Ran the CPU-safe pipeline (per instructions, skipped train-deep — you
+run that on Colab):
+
+```
+make splits         → train=2468 val=529 test=529
+make train-naive    → macro_f1=0.014  (most of Webis is neutral news; naive
+                       under-fires on low-trap content, as expected)
+make train-classical→ macro_f1=0.425, saved models/classical.pkl
+make evaluate       → comparison.json written
+
+=== Model comparison (test set) ===
+model          macro_f1  macro_acc   comp_MAE  comp_RMSE   comp_R2
+naive             0.014      0.866       7.12      11.30    -0.594
+classical         0.425      0.877      11.70      14.05    -1.462
+```
+
+Classical scores a real F1 but its composite derivation is noisier than
+naive (expected: naive just under-predicts everything, which on a
+low-scoring corpus gives low MAE "for free"). Deep model will anchor
+both once trained on Colab.
+
+committed `models/classical.pkl` so the backend can serve it locally
+right now (router → classical → naive fallback chain).
+
