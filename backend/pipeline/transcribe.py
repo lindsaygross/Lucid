@@ -59,11 +59,24 @@ def _is_credible_key(key: str | None) -> bool:
 
 
 def _transcribe_audio(audio_path: Path) -> str:
-    """Dispatch to API or local Whisper based on config."""
+    """Dispatch to API or local Whisper based on config.
+
+    In slim / prod builds that don't install openai-whisper, the local
+    fallback raises ImportError — log and return an empty transcript so the
+    rest of the pipeline (caption + overlay text) still produces a usable
+    scoring input.
+    """
     settings = get_settings()
     if _is_credible_key(settings.openai_api_key):
         return _transcribe_openai(audio_path, api_key=settings.openai_api_key)
-    return _transcribe_local(audio_path, model_name=settings.whisper_local_model)
+    try:
+        return _transcribe_local(audio_path, model_name=settings.whisper_local_model)
+    except ImportError:
+        logger.warning(
+            "openai-whisper not installed and no OPENAI_API_KEY set — "
+            "returning empty transcript",
+        )
+        return ""
 
 
 def _transcribe_openai(audio_path: Path, api_key: str) -> str:

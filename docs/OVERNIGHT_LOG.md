@@ -40,3 +40,29 @@ When Lindsay is ready to ship deep inference: train on Colab, push to HF
 Hub, add `transformers` + `huggingface-hub` back to requirements-prod, and
 wire a `HFRemoteDeepPredictor` that hits the HF inference endpoint.
 
+
+## [01:03] Backend resilience: empty transcript in slim prod
+
+`transcribe._transcribe_audio` now catches `ImportError` when it tries to
+load the local whisper fallback. This matters in prod because
+`requirements-prod.txt` deliberately drops `openai-whisper` (pulls torch).
+
+Behavior:
+- If `OPENAI_API_KEY` is set and credible → Whisper API (preferred).
+- If not → try local whisper; on ImportError, log + return `""`. The rest
+  of the pipeline (caption + Claude-Vision overlay OCR) still produces a
+  usable scoring input.
+
+## Railway deploy env vars — action for Lindsay
+
+Railway service environment variables the backend needs (set in dashboard):
+- `ANTHROPIC_API_KEY` — for vision OCR + "See Through It" rewrite
+- `OPENAI_API_KEY` — for Whisper API transcription (optional but strongly
+  recommended; without it, transcript will be empty in prod)
+
+`LUCID_PREFERRED_MODEL` is already set to `naive` by `nixpacks.toml`, so
+prod routes straight to the rule-based scorer. No torch install needed.
+
+Frontend env on Vercel:
+- `NEXT_PUBLIC_API_URL` = `https://<your-railway-subdomain>.up.railway.app`
+
