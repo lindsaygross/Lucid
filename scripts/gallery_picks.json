@@ -1,0 +1,61 @@
+{
+  "_comment": "Pre-cached gallery TikToks for the landing-page 'Try these' carousel and the screenshot wall. Mix of classic manipulation, sneaky manipulation, and one control. URLs are placeholders — Lindsay and Claude will curate the final 8 in the local session tomorrow by searching current trending content. Slugs stay stable so frontend can deep-link.",
+  "picks": [
+    {
+      "slug": "classic-outrage-boss",
+      "profile": "classic",
+      "primary_dimension": "outrage_bait",
+      "description": "High outrage bait: moralized villain framing, ALL-CAPS indictment, rhetorical questions demanding audience anger.",
+      "url": "TBD"
+    },
+    {
+      "slug": "classic-fomo-course",
+      "profile": "classic",
+      "primary_dimension": "fomo_trigger",
+      "description": "High FOMO: artificial scarcity ('only X spots'), success-gap framing, comparative lifestyle anxiety.",
+      "url": "TBD"
+    },
+    {
+      "slug": "classic-engagement-bait",
+      "profile": "classic",
+      "primary_dimension": "engagement_bait",
+      "description": "High engagement bait: explicit 'comment X if…' / 'tag someone who…' prompts, follow-for-part-2.",
+      "url": "TBD"
+    },
+    {
+      "slug": "classic-curiosity-gap",
+      "profile": "classic",
+      "primary_dimension": "curiosity_gap",
+      "description": "High curiosity gap: 'wait for it', unresolved forward-reference, cliffhanger at max duration.",
+      "url": "TBD"
+    },
+    {
+      "slug": "sneaky-soft-fomo",
+      "profile": "sneaky",
+      "primary_dimension": "fomo_trigger",
+      "description": "Subtle FOMO: framed as 'wellness tip' but weaponizes social comparison (implied lifestyle gap).",
+      "url": "TBD"
+    },
+    {
+      "slug": "sneaky-empathy-guilt",
+      "profile": "sneaky",
+      "primary_dimension": "emotional_manipulation",
+      "description": "Subtle emotional manipulation: looks like a heartwarming share but includes a guilt-trip close ('99% will scroll past').",
+      "url": "TBD"
+    },
+    {
+      "slug": "sneaky-dopamine-wellness",
+      "profile": "sneaky",
+      "primary_dimension": "dopamine_design",
+      "description": "Subtle dopamine design: soft voice + aesthetic visuals but rapid cuts, color grading, numbered hook-reveal structure.",
+      "url": "TBD"
+    },
+    {
+      "slug": "control-clean",
+      "profile": "control",
+      "primary_dimension": null,
+      "description": "Low manipulation across all dimensions — e.g., an educator explaining a concept calmly with complete information and no hooks.",
+      "url": "TBD"
+    }
+  ]
+}

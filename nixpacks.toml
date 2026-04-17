@@ -1,0 +1,26 @@
+# Railway / Nixpacks build config for the LUCID backend.
+# Ignores the frontend/ subdirectory — that deploys separately on Vercel.
+
+[phases.setup]
+nixPkgs = ["python311", "ffmpeg", "gcc"]
+
+[phases.install]
+cmds = [
+  "python -m venv /opt/venv",
+  ". /opt/venv/bin/activate && pip install --upgrade pip",
+  ". /opt/venv/bin/activate && pip install -r requirements-prod.txt",
+]
+
+# Production uses the naive model only (rule-based, pure stdlib). This lets the
+# Railway build skip torch + transformers + xgboost, which otherwise blow the
+# free-tier build OOM. Deep model moves behind HF inference endpoint later.
+[variables]
+LUCID_PREFERRED_MODEL = "naive"
+
+[phases.build]
+cmds = [
+  "echo 'build phase — nothing to compile'",
+]
+
+[start]
+cmd = ". /opt/venv/bin/activate && uvicorn app:app --host 0.0.0.0 --port $PORT"

@@ -1,0 +1,15 @@
+# TikTok URLs for in-domain training + gallery.
+# One URL per line. Lines starting with # are ignored.
+#
+# Add trending TikToks across the manipulation spectrum:
+#   - classic outrage bait / FOMO / engagement bait / curiosity gap
+#   - sneaky (soft-manipulative under wellness / educational framing)
+#   - clean controls (educational, conversational, no hooks)
+#
+# To populate this file, run a manual search on tiktok.com/explore and
+# copy-paste ~50–200 URLs across the spectrum. Gallery picks (8 URLs)
+# should also live here — see scripts/gallery_picks.json for which slugs
+# correspond to which profiles.
+#
+# Example:
+# https://www.tiktok.com/@someuser/video/7412345678901234567

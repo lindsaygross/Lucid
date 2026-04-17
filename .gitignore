@@ -205,3 +205,59 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ======================================================================
+# LUCID project-specific
+# ======================================================================
+
+# Node / frontend
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+.vercel
+
+# Data (too big / regenerable)
+data/raw/**
+data/processed/**
+data/outputs/**
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/outputs/.gitkeep
+
+# Model artifacts (use HuggingFace Hub for DistilBERT; keep small classical models)
+models/distilbert/
+models/*.bin
+models/*.safetensors
+models/*.pt
+!models/.gitkeep
+
+# Scraped media
+*.mp4
+*.webm
+*.mp3
+*.wav
+
+# Whisper cache
+.whisper_cache/
+
+# HuggingFace cache
+.cache/
+~/.cache/huggingface/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log
+logs/
+
+# Secrets (extra belt-and-suspenders — .env already caught above)
+*.pem
+*.key
+secrets/
