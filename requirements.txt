@@ -32,7 +32,11 @@ xgboost>=2.0.0
 vaderSentiment>=3.3.2
 textstat>=0.7.4
 
-# Deep model runtime (fine-tuned DistilBERT via HuggingFace Hub)
-torch>=2.2.0
+# Deep model runtime (fine-tuned DistilBERT via HuggingFace Hub).
+# CPU-only torch wheel: default PyPI torch drags in ~2GB of CUDA libs and
+# makes the Railway image push time out. Railway has no GPU, so CUDA is
+# pure dead weight. The +cpu wheel lives on PyTorch's CPU index.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.4.1+cpu
 transformers>=4.40.0
 huggingface-hub>=0.20.0
