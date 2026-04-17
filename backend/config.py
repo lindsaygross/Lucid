@@ -30,6 +30,9 @@ class Settings(BaseSettings):
     hf_token: str | None = Field(default=None, alias="HF_TOKEN")
 
     model_path: str = Field(default="models/distilbert", alias="LUCID_MODEL_PATH")
+    hf_repo: str = Field(
+        default="lindsaygross32/lucid-distilbert", alias="LUCID_HF_REPO"
+    )
     log_level: str = Field(default="INFO", alias="LUCID_LOG_LEVEL")
 
     # Claude model selection

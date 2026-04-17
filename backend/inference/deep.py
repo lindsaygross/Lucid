@@ -56,27 +56,56 @@ class LucidDistilBERT(nn.Module):
 
 
 class DeepPredictor:
-    """Inference wrapper around a trained LucidDistilBERT checkpoint."""
+    """Inference wrapper around a trained LucidDistilBERT checkpoint.
+
+    Resolves weights from a local directory if it exists, otherwise
+    `snapshot_download`s from a HuggingFace Hub repo id (e.g.
+    "lindsaygross32/lucid-distilbert") and caches the result. This lets prod
+    pull the ~266 MB checkpoint once on first request without bundling it
+    into the container image.
+    """
 
     def __init__(
         self,
-        model_dir: str | Path,
+        model_dir: str | Path | None = None,
+        hf_repo: str | None = None,
         device: str | None = None,
     ) -> None:
+        if not model_dir and not hf_repo:
+            raise ValueError("DeepPredictor needs either model_dir or hf_repo")
+
         self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
-        model_dir = Path(model_dir)
-        if not model_dir.exists():
-            raise FileNotFoundError(
-                f"DistilBERT model dir not found at {model_dir}. "
-                "Train via notebooks/train_lucid.ipynb on Colab, then place the "
-                "checkpoint directory here."
-            )
-        self.tokenizer = AutoTokenizer.from_pretrained(model_dir)
+        resolved = self._resolve_weights_dir(model_dir, hf_repo)
+
+        self.tokenizer = AutoTokenizer.from_pretrained(resolved)
         self.model = LucidDistilBERT(BASE_MODEL_NAME, num_dimensions=len(DIMENSIONS))
-        state = torch.load(model_dir / "pytorch_model.bin", map_location=self.device)
+        state = torch.load(resolved / "pytorch_model.bin", map_location=self.device)
         self.model.load_state_dict(state)
         self.model.to(self.device)
         self.model.eval()
+
+    @staticmethod
+    def _resolve_weights_dir(
+        model_dir: str | Path | None, hf_repo: str | None
+    ) -> Path:
+        """Return a directory that has both pytorch_model.bin + tokenizer files."""
+        if model_dir:
+            local = Path(model_dir)
+            if local.exists() and (local / "pytorch_model.bin").exists():
+                logger.info("deep model: using local weights at %s", local)
+                return local
+
+        if not hf_repo:
+            raise FileNotFoundError(
+                f"DistilBERT weights not found at {model_dir} and no hf_repo set. "
+                "Train via notebooks/train_lucid.ipynb or set LUCID_HF_REPO."
+            )
+
+        from huggingface_hub import snapshot_download  # lazy import
+
+        logger.info("deep model: downloading from HuggingFace Hub repo %s", hf_repo)
+        cached = snapshot_download(repo_id=hf_repo)
+        return Path(cached)
 
     @torch.inference_mode()
     def predict(self, text: str, max_length: int = 256) -> Prediction:
@@ -91,13 +120,16 @@ class DeepPredictor:
         enc = {k: v.to(self.device) for k, v in enc.items()}
         out = self.model(enc["input_ids"], enc["attention_mask"])
 
-        composite_prob = float(torch.sigmoid(out["composite_logit"]).item())
         dim_probs = torch.sigmoid(out["dimension_logits"])[0].cpu().tolist()
         dim_scores = {dim: float(p) for dim, p in zip(DIMENSIONS, dim_probs)}
 
-        # Use the model-predicted composite directly for the 0–100 score
-        # (falling back to the average of dimension scores if it's obviously off).
-        composite_score = int(round(100 * composite_prob))
-        pred = Prediction.from_dimension_scores(dim_scores)
-        pred.scroll_trap_score = composite_score
-        return pred
+        # We deliberately ignore the composite regression head and derive the
+        # 0-100 Scroll Trap Score as the mean of the 6 dimension probabilities.
+        # Reason: the composite head was trained on labels whose distribution
+        # skews low-severity (Webis news tweets + Stop Clickbait headlines),
+        # so it under-fires on real TikTok manipulation even when per-dimension
+        # heads clearly detect the tactics. Mean-of-dimensions is consistent
+        # with the per-dimension bars users see and matches the rubric-based
+        # severity intuition. The trained composite head's metrics still live
+        # in the report as an honest accounting of what the model learned.
+        return Prediction.from_dimension_scores(dim_scores)

@@ -1,12 +1,18 @@
 # Production / deploy requirements (Railway picks this up automatically).
 #
-# Slim stack: FastAPI + API clients (Anthropic, OpenAI) + yt-dlp + Pillow.
-# Drops the heavy training + eval stack — those live in requirements-dev.txt.
+# Ships all three models into prod:
+#   - naive  (rule-based, stdlib only)
+#   - classical  (XGBoost + TF-IDF + handcrafted features; needs sklearn, xgboost,
+#     vaderSentiment, textstat)
+#   - deep  (fine-tuned DistilBERT pulled from HuggingFace Hub on first request;
+#     needs torch, transformers, huggingface-hub)
 #
-# The inference router falls back naive → classical → deep depending on what
-# imports successfully. In this slim install only naive loads; classical and
-# deep gracefully degrade. Set LUCID_PREFERRED_MODEL=naive to skip the noisy
-# fallback-chain log lines in prod.
+# Still drops training-only deps: openai-whisper, datasets, accelerate, pandas,
+# numpy-bulk, pyarrow, praw, gradio, matplotlib, seaborn, nltk, krippendorff.
+# Those live in requirements-dev.txt.
+#
+# Router picks the preferred model via LUCID_PREFERRED_MODEL env var
+# (deep -> classical -> naive fallback chain on error).
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
 anthropic>=0.40.0
@@ -18,3 +24,15 @@ pydantic-settings>=2.1.0
 python-dotenv>=1.0.0
 python-multipart>=0.0.9
 Pillow>=10.2.0
+
+# Classical model runtime (TF-IDF + handcrafted features -> XGBoost)
+numpy>=1.26.0
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+vaderSentiment>=3.3.2
+textstat>=0.7.4
+
+# Deep model runtime (fine-tuned DistilBERT via HuggingFace Hub)
+torch>=2.2.0
+transformers>=4.40.0
+huggingface-hub>=0.20.0

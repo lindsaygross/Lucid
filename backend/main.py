@@ -18,6 +18,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
+from backend.config import get_settings
 from backend.inference.router import InferenceRouter
 from backend.pipeline import tiktok
 from backend.pipeline.analyze import analyze_text, analyze_url
@@ -49,13 +50,20 @@ _router: InferenceRouter | None = None
 def get_router() -> InferenceRouter:
     """Lazy-initialize the InferenceRouter on first request.
 
-    In production (Railway), set `LUCID_PREFERRED_MODEL=naive` to skip
-    torch/xgboost import paths entirely. Local dev keeps the full stack.
+    `LUCID_PREFERRED_MODEL` picks the head of the fallback chain
+    (deep -> classical -> naive). `LUCID_HF_REPO` overrides the default
+    HuggingFace repo used by the deep predictor when local weights aren't
+    bundled (which is the normal prod case).
     """
     global _router
     if _router is None:
+        settings = get_settings()
         preferred = os.getenv("LUCID_PREFERRED_MODEL", "deep")
-        _router = InferenceRouter(preferred=preferred, model_dir=str(REPO_ROOT / "models"))
+        _router = InferenceRouter(
+            preferred=preferred,
+            model_dir=str(REPO_ROOT / "models"),
+            hf_repo=settings.hf_repo,
+        )
     return _router
 
 

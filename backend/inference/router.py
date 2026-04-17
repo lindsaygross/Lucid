@@ -29,9 +29,15 @@ class InferenceRouter:
     minimal production deployment (e.g., naive-only) does not need those deps.
     """
 
-    def __init__(self, preferred: str = "deep", model_dir: str = "models") -> None:
+    def __init__(
+        self,
+        preferred: str = "deep",
+        model_dir: str = "models",
+        hf_repo: str | None = None,
+    ) -> None:
         self.preferred = preferred
         self.model_dir = Path(model_dir)
+        self.hf_repo = hf_repo
         self._naive: NaivePredictor | None = None
         self._classical: "ClassicalPredictor | None" = None
         self._deep: "DeepPredictor | None" = None
@@ -67,7 +73,10 @@ class InferenceRouter:
         if name == "deep":
             if self._deep is None:
                 from backend.inference.deep import DeepPredictor  # lazy import
-                self._deep = DeepPredictor(self.model_dir / "distilbert")
+                self._deep = DeepPredictor(
+                    model_dir=self.model_dir / "distilbert",
+                    hf_repo=self.hf_repo,
+                )
             return self._deep
         raise ValueError(f"unknown model: {name}")
 
