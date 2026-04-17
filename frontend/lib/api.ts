@@ -43,6 +43,60 @@ export async function analyze(
   return (await r.json()) as AnalysisResult;
 }
 
+export type ModelName = "naive" | "classical" | "deep";
+
+export type SingleModelPrediction = {
+  scroll_trap_score?: number;
+  dimension_scores?: Record<DimensionKey, number>;
+  dimension_present?: Record<DimensionKey, boolean>;
+  error?: string;
+};
+
+export type CompareResult = {
+  text: string;
+  predictions: Record<ModelName, SingleModelPrediction>;
+};
+
+export async function compare(text: string): Promise<CompareResult> {
+  const r = await fetch(`${API_URL}/analyze/compare`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text }),
+  });
+  if (!r.ok) {
+    const body = await r.text();
+    throw new Error(`Compare failed (${r.status}): ${body.slice(0, 200)}`);
+  }
+  return (await r.json()) as CompareResult;
+}
+
+export type TokenAttribution = {
+  token: string;
+  position: number;
+  attribution: number;
+};
+
+export type ExplainResult = {
+  text: string;
+  scroll_trap_score: number;
+  dimension_scores: Record<DimensionKey, number>;
+  dimension_present: Record<DimensionKey, boolean>;
+  dimension_tokens: Record<DimensionKey, TokenAttribution[]>;
+};
+
+export async function explain(text: string, topK = 8): Promise<ExplainResult> {
+  const r = await fetch(`${API_URL}/analyze/explain`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text, top_k: topK }),
+  });
+  if (!r.ok) {
+    const body = await r.text();
+    throw new Error(`Explain failed (${r.status}): ${body.slice(0, 200)}`);
+  }
+  return (await r.json()) as ExplainResult;
+}
+
 export const DIMENSIONS: {
   key: DimensionKey;
   label: string;
