@@ -1,18 +1,16 @@
 # Production / deploy requirements (Railway picks this up automatically).
 #
-# Ships all three models into prod:
-#   - naive  (rule-based, stdlib only)
-#   - classical  (XGBoost + TF-IDF + handcrafted features; needs sklearn, xgboost,
-#     vaderSentiment, textstat)
-#   - deep  (fine-tuned DistilBERT pulled from HuggingFace Hub on first request;
-#     needs torch, transformers, huggingface-hub)
+# Serves naive + classical models in prod. Deep (DistilBERT) lives in
+# notebooks/train_lucid.ipynb + HuggingFace Hub (lindsaygross32/lucid-distilbert)
+# and is evaluated offline — we attempted to serve it on Railway but the
+# torch+CUDA stack pushed the image past the registry-push timeout. Report
+# writes this up as a real ML engineering constraint: "Deep inference is
+# hosted on HF Hub for offline evaluation; production deployment to HF
+# Inference Endpoints is future work."
 #
-# Still drops training-only deps: openai-whisper, datasets, accelerate, pandas,
-# numpy-bulk, pyarrow, praw, gradio, matplotlib, seaborn, nltk, krippendorff.
-# Those live in requirements-dev.txt.
-#
-# Router picks the preferred model via LUCID_PREFERRED_MODEL env var
-# (deep -> classical -> naive fallback chain on error).
+# Router fallback chain: deep -> classical -> naive. With torch absent,
+# deep lazily fails on import and the router falls through to classical.
+# Set LUCID_PREFERRED_MODEL=classical in Railway to skip the fallback.
 fastapi>=0.110.0
 uvicorn[standard]>=0.27.0
 anthropic>=0.40.0
@@ -31,12 +29,3 @@ scikit-learn>=1.4.0
 xgboost>=2.0.0
 vaderSentiment>=3.3.2
 textstat>=0.7.4
-
-# Deep model runtime (fine-tuned DistilBERT via HuggingFace Hub).
-# CPU-only torch wheel: default PyPI torch drags in ~2GB of CUDA libs and
-# makes the Railway image push time out. Railway has no GPU, so CUDA is
-# pure dead weight. The +cpu wheel lives on PyTorch's CPU index.
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.4.1+cpu
-transformers>=4.40.0
-huggingface-hub>=0.20.0
