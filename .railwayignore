@@ -1,0 +1,7 @@
+# Exclude from Railway build context — backend only, frontend deploys on Vercel
+frontend/
+notebooks/
+data/
+models/
+docs/
+.venv/
