@@ -105,3 +105,19 @@ Background `#000000`, primary text `#FFFFFF`, secondary text `#A1A1AA`.
 
 - Dev: `http://localhost:8000`
 - Prod (Vercel): `https://lucid-api.up.railway.app` (or wherever Railway deploys)
+
+### `NEXT_PUBLIC_CINEMATIC_INTRO`
+
+Controls whether the homepage renders the cinematic intro (persistent
+atmosphere layer, scroll-pinned five-beat manifesto, polished analyzer
+frame). Default when unset: `true` (shows the new experience).
+
+To render the original pre-cinematic homepage, set the value to the exact
+string `false`:
+
+- **Local:** add `NEXT_PUBLIC_CINEMATIC_INTRO=false` to `.env.local` and
+  restart `npm run dev`.
+- **Vercel:** set `NEXT_PUBLIC_CINEMATIC_INTRO` to `false` under Project
+  Settings, Environment Variables, then redeploy.
+
+Toggling is a one-switch rollback. No code revert required.
