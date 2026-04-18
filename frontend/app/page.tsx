@@ -47,6 +47,14 @@ export default function Home() {
 
   return (
     <main className="relative flex min-h-screen w-full flex-col text-white">
+      {cinematic && (
+        <a
+          href="#analyzer"
+          className="sr-only z-50 focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:rounded-md focus:border focus:border-white/30 focus:bg-black/90 focus:px-4 focus:py-2 focus:font-mono focus:text-[11px] focus:uppercase focus:tracking-[0.24em] focus:text-white"
+        >
+          skip to analyzer
+        </a>
+      )}
       {cinematic && <AtmosphereBackground />}
       <div className="absolute inset-x-0 top-0 z-30">
         <SiteNav current="home" />

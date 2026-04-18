@@ -31,17 +31,19 @@ type LineProps = {
   start: number;
   end: number;
   className?: string;
+  as?: "div" | "h2";
   children: React.ReactNode;
 };
 
-function Line({ progress, start, end, className, children }: LineProps) {
+function Line({ progress, start, end, className, as = "div", children }: LineProps) {
   const opacity = useTransform(progress, [start, end], [0, 1]);
   const y = useTransform(progress, [start, end], [14, 0]);
   const filter = useTransform(progress, [start, end], ["blur(6px)", "blur(0px)"]);
+  const Component = as === "h2" ? motion.h2 : motion.div;
   return (
-    <motion.div style={{ opacity, y, filter }} className={className}>
+    <Component style={{ opacity, y, filter }} className={className}>
       {children}
-    </motion.div>
+    </Component>
   );
 }
 
@@ -106,6 +108,7 @@ function Beat01() {
         progress={progress}
         start={0.02}
         end={0.1}
+        as="h2"
         className="font-heading text-[28px] font-semibold leading-[1.15] text-white sm:text-[40px]"
       >
         You opened TikTok at 11.
@@ -170,6 +173,7 @@ function Beat02() {
         progress={progress}
         start={0.04}
         end={0.18}
+        as="h2"
         className="font-heading text-[34px] font-semibold leading-[1.1] text-white sm:text-[56px]"
       >
         This isn&rsquo;t a willpower problem.
@@ -230,6 +234,7 @@ function Beat03() {
         progress={progress}
         start={0.44}
         end={0.56}
+        as="h2"
         className="mt-16 font-heading text-[52px] font-semibold leading-[0.95] tracking-[-0.02em] text-white sm:text-[104px] md:text-[120px]"
       >
         260 videos.
@@ -293,6 +298,7 @@ function Beat04() {
         progress={progress}
         start={0.01}
         end={0.08}
+        as="h2"
         className="font-heading text-[24px] font-semibold leading-[1.15] text-white sm:text-[36px]"
       >
         This is not a complaint anymore.
