@@ -46,7 +46,7 @@ export default function Home() {
   }
 
   return (
-    <main className="relative flex min-h-screen w-full flex-col bg-black text-white">
+    <main className="relative flex min-h-screen w-full flex-col text-white">
       {cinematic && <AtmosphereBackground />}
       <div className="absolute inset-x-0 top-0 z-30">
         <SiteNav current="home" />
