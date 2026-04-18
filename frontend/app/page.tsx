@@ -11,6 +11,7 @@ import { AnalyzerInput } from "@/components/analyzer-input";
 import { GalleryTiles } from "@/components/gallery-tiles";
 import { WaitState } from "@/components/wait-state";
 import { ResultsView } from "@/components/results-view";
+import { SiteNav } from "@/components/site-nav";
 
 type Status = "idle" | "loading" | "done" | "error";
 
@@ -44,6 +45,9 @@ export default function Home() {
 
   return (
     <main className="relative flex min-h-screen w-full flex-col bg-black text-white">
+      <div className="absolute inset-x-0 top-0 z-30">
+        <SiteNav current="home" />
+      </div>
       <Hero />
 
       <section
