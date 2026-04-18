@@ -150,7 +150,7 @@ function Beat01() {
       </Line>
 
       <Footnote progress={progress} start={0.9}>
-        1 &middot; Sensor Tower, 2024.
+        &sup1; Sensor Tower, 2024.
       </Footnote>
     </BeatShell>
   );
@@ -230,7 +230,7 @@ function Beat03() {
         progress={progress}
         start={0.44}
         end={0.56}
-        className="mt-16 font-heading text-[64px] font-semibold leading-[0.95] tracking-[-0.02em] text-white sm:text-[120px]"
+        className="mt-16 font-heading text-[52px] font-semibold leading-[0.95] tracking-[-0.02em] text-white sm:text-[104px] md:text-[120px]"
       >
         260 videos.
       </Line>
@@ -272,7 +272,7 @@ function Beat03() {
       </Line>
 
       <Footnote progress={progress} start={0.97}>
-        2 &middot; Inadvertently unsealed in <em>Commonwealth of Kentucky v. TikTok Inc.</em>,
+        &sup2; Inadvertently unsealed in <em>Commonwealth of Kentucky v. TikTok Inc.</em>,
         October 2024. Reporting: NPR, Washington Post, CNN.
       </Footnote>
     </BeatShell>
@@ -331,38 +331,45 @@ function Beat04() {
 
       <Line
         progress={progress}
-        start={0.6}
-        end={0.72}
+        start={0.58}
+        end={0.68}
         className="mt-14 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[24px]"
       >
         &ldquo;No one wakes up thinking they want to maximize the number of times they
-        open Instagram that day. But that&rsquo;s exactly what our product teams are
-        trying to do.&rdquo;
+        open Instagram that day.
+      </Line>
+      <Line
+        progress={progress}
+        start={0.68}
+        end={0.76}
+        className="mt-4 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[24px]"
+      >
+        But that&rsquo;s exactly what our product teams are trying to do.&rdquo;
       </Line>
 
       <Line
         progress={progress}
-        start={0.74}
-        end={0.82}
-        className="mt-6 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400 sm:text-[12px]"
+        start={0.78}
+        end={0.86}
+        className="mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white sm:text-[12px]"
       >
-        <span className="text-zinc-200">Max Eulenstein</span>, Vice President of Product, Meta.
+        Max Eulenstein, Vice President of Product, Meta.
       </Line>
       <Line
         progress={progress}
-        start={0.82}
-        end={0.9}
-        className="font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-500 sm:text-[12px]"
+        start={0.86}
+        end={0.92}
+        className="font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400 sm:text-[12px]"
       >
         Internal email, January 2021.
         <sup className="ml-0.5 text-[10px] text-zinc-400">4</sup>
       </Line>
 
-      <Footnote progress={progress} start={0.92}>
-        3 &middot; Attorneys General of CA, NY, NJ, et al. v. Meta Platforms Inc., October
+      <Footnote progress={progress} start={0.94}>
+        &sup3; Attorneys General of CA, NY, NJ, et al. v. Meta Platforms Inc., October
         24, 2023.
         <br />
-        4 &middot; Unsealed in the federal complaint, November 2023. Reporting: Time, CBS
+        &#8308; Unsealed in the federal complaint, November 2023. Reporting: Time, CBS
         News, NPR.
       </Footnote>
     </BeatShell>
@@ -427,7 +434,7 @@ function Beat05() {
           {/* wordmark + two definitions */}
           <motion.h2
             style={{ opacity: wordmarkOpacity, y: wordmarkY }}
-            className="select-none font-heading text-[88px] font-black leading-none tracking-[-0.02em] text-white sm:text-[160px] md:text-[200px]"
+            className="select-none font-heading text-[72px] font-black leading-none tracking-[-0.02em] text-white sm:text-[140px] md:text-[180px]"
           >
             LUCID
           </motion.h2>
@@ -522,7 +529,7 @@ function StaticManifesto() {
             <span className="font-semibold text-white">24 days a year spent scrolling.</span>
           </p>,
           <p key="fn" className="mt-4 font-mono text-[11px] text-zinc-500">
-            1 &middot; Sensor Tower, 2024.
+            &sup1; Sensor Tower, 2024.
           </p>,
         ]}
       />
@@ -547,7 +554,7 @@ function StaticManifesto() {
             TikTok&rsquo;s own engineers calculated the precise number of videos it takes
             for a user to become addicted.
           </p>,
-          <p key="l2" className="mt-6 font-heading text-[56px] font-semibold leading-[0.95] tracking-[-0.02em] text-white sm:text-[88px]">
+          <p key="l2" className="mt-6 font-heading text-[48px] font-semibold leading-[0.95] tracking-[-0.02em] text-white sm:text-[88px]">
             260 videos.
           </p>,
           <p key="l3" className="mt-1 font-mono text-[13px] uppercase tracking-[0.24em] text-zinc-400 sm:text-[15px]">
@@ -559,7 +566,7 @@ function StaticManifesto() {
             <sup className="ml-0.5 font-mono text-[10px] text-zinc-400">2</sup>
           </p>,
           <p key="fn" className="mt-4 font-mono text-[11px] text-zinc-500">
-            2 &middot; Inadvertently unsealed in <em>Commonwealth of Kentucky v. TikTok Inc.</em>,
+            &sup2; Inadvertently unsealed in <em>Commonwealth of Kentucky v. TikTok Inc.</em>,
             October 2024. Reporting: NPR, Washington Post, CNN.
           </p>,
         ]}
@@ -582,21 +589,25 @@ function StaticManifesto() {
           <p key="l4" className="font-mono text-[12px] uppercase tracking-[0.2em] text-zinc-400 sm:text-[13px]">
             Multidistrict Litigation No. 3047. Argued in court right now.
           </p>,
-          <blockquote key="q" className="mt-8 border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[22px]">
-            &ldquo;No one wakes up thinking they want to maximize the number of times they
-            open Instagram that day. But that&rsquo;s exactly what our product teams are
-            trying to do.&rdquo;
+          <blockquote key="q" className="mt-8 flex flex-col gap-3 border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[22px]">
+            <p>
+              &ldquo;No one wakes up thinking they want to maximize the number of times
+              they open Instagram that day.
+            </p>
+            <p>But that&rsquo;s exactly what our product teams are trying to do.&rdquo;</p>
           </blockquote>,
-          <p key="att" className="mt-2 font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400">
-            <span className="text-zinc-200">Max Eulenstein</span>, Vice President of Product,
-            Meta. Internal email, January 2021.
+          <p key="att1" className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
+            Max Eulenstein, Vice President of Product, Meta.
+          </p>,
+          <p key="att2" className="font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400">
+            Internal email, January 2021.
             <sup className="ml-0.5 text-[10px] text-zinc-400">4</sup>
           </p>,
           <p key="fn" className="mt-4 font-mono text-[11px] text-zinc-500">
-            3 &middot; Attorneys General of CA, NY, NJ, et al. v. Meta Platforms Inc., October
+            &sup3; Attorneys General of CA, NY, NJ, et al. v. Meta Platforms Inc., October
             24, 2023.
             <br />
-            4 &middot; Unsealed in the federal complaint, November 2023. Reporting: Time, CBS
+            &#8308; Unsealed in the federal complaint, November 2023. Reporting: Time, CBS
             News, NPR.
           </p>,
         ]}
@@ -611,7 +622,7 @@ function StaticManifesto() {
           <p key="l2" className="font-heading text-[24px] font-semibold leading-[1.15] text-white sm:text-[30px]">
             That&rsquo;s by design too.
           </p>,
-          <h2 key="w" className="mt-10 font-heading text-[72px] font-black leading-none tracking-[-0.02em] text-white sm:text-[128px]">
+          <h2 key="w" className="mt-10 font-heading text-[64px] font-black leading-none tracking-[-0.02em] text-white sm:text-[128px]">
             LUCID
           </h2>,
           <p key="d1" className="mt-4 font-mono text-[13px] italic leading-[1.6] text-zinc-300 sm:text-[15px]">
