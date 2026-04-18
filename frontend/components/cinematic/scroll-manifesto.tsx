@@ -299,7 +299,7 @@ function Beat04() {
         start={0.01}
         end={0.08}
         as="h2"
-        className="font-heading text-[24px] font-semibold leading-[1.15] text-white sm:text-[36px]"
+        className="font-heading text-[22px] font-semibold leading-[1.15] text-white sm:text-[30px]"
       >
         This is not a complaint anymore.
       </Line>
@@ -307,7 +307,7 @@ function Beat04() {
         progress={progress}
         start={0.1}
         end={0.18}
-        className="mt-4 font-heading text-[24px] font-semibold leading-[1.15] text-white sm:text-[36px]"
+        className="mt-3 font-heading text-[22px] font-semibold leading-[1.15] text-white sm:text-[30px]"
       >
         It&rsquo;s the operative theory of a federal case.
       </Line>
@@ -316,7 +316,7 @@ function Beat04() {
         progress={progress}
         start={0.24}
         end={0.36}
-        className="mt-10 text-[16px] leading-[1.55] text-zinc-200 sm:text-[18px]"
+        className="mt-8 text-[15px] leading-[1.55] text-zinc-200 sm:text-[17px]"
       >
         <span className="font-semibold text-white">Forty-two state attorneys general</span>{" "}
         are suing Meta for designing Instagram and Facebook to addict children, while
@@ -328,7 +328,7 @@ function Beat04() {
         progress={progress}
         start={0.38}
         end={0.46}
-        className="mt-6 font-mono text-[12px] uppercase tracking-[0.2em] text-zinc-400 sm:text-[13px]"
+        className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-400 sm:text-[12px]"
       >
         Multidistrict Litigation No. 3047. Argued in court right now.
       </Line>
@@ -339,7 +339,7 @@ function Beat04() {
         progress={progress}
         start={0.58}
         end={0.68}
-        className="mt-14 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[24px]"
+        className="mt-10 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[17px] italic leading-[1.5] text-white sm:text-[21px]"
       >
         &ldquo;No one wakes up thinking they want to maximize the number of times they
         open Instagram that day.
@@ -348,7 +348,7 @@ function Beat04() {
         progress={progress}
         start={0.68}
         end={0.76}
-        className="mt-4 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[24px]"
+        className="mt-3 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[17px] italic leading-[1.5] text-white sm:text-[21px]"
       >
         But that&rsquo;s exactly what our product teams are trying to do.&rdquo;
       </Line>
@@ -357,7 +357,7 @@ function Beat04() {
         progress={progress}
         start={0.78}
         end={0.86}
-        className="mt-6 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white sm:text-[12px]"
+        className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white sm:text-[12px]"
       >
         Max Eulenstein, Vice President of Product, Meta.
       </Line>
