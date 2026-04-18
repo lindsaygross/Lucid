@@ -51,9 +51,8 @@ export function GalleryTiles({ onPick }: GalleryTilesProps) {
           </motion.button>
         ))}
       </div>
-      <p className="text-[11px] text-zinc-500">
-        These are placeholders — the gallery wires up to pre-cached TikTok analyses once the
-        backend finishes caching them.
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500 sm:text-[11px]">
+        demo prompts, cached tiktok analyses land here as the gallery warms.
       </p>
     </div>
   );
