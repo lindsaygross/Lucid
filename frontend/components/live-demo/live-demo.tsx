@@ -3,9 +3,9 @@
 import { motion, useReducedMotion } from "framer-motion";
 import type { AnalysisResult } from "@/lib/api";
 import { DemoCard } from "./demo-card";
-import highRaw from "../../../scripts/cached/high_donotfind.json";
-import medRaw from "../../../scripts/cached/med_rossjenna3.json";
-import lowRaw from "../../../scripts/cached/low_apnews.json";
+import highRaw from "./cached/high_donotfind.json";
+import medRaw from "./cached/med_rossjenna3.json";
+import lowRaw from "./cached/low_apnews.json";
 
 const HIGH = highRaw as AnalysisResult;
 const MED = medRaw as AnalysisResult;
