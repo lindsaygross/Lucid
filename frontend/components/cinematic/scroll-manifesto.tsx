@@ -103,7 +103,7 @@ function Beat01() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={360} sectionRef={ref} label="Beat 01, recognition and scale">
+    <BeatShell heightVh={220} sectionRef={ref} label="Beat 01, recognition and scale">
       <Line
         progress={progress}
         start={0.02}
@@ -168,7 +168,7 @@ function Beat02() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={480} sectionRef={ref} label="Beat 02, absolution">
+    <BeatShell heightVh={300} sectionRef={ref} label="Beat 02, absolution">
       <Line
         progress={progress}
         start={0.04}
@@ -210,7 +210,7 @@ function Beat03() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={500} sectionRef={ref} label="Beat 03, evidence">
+    <BeatShell heightVh={300} sectionRef={ref} label="Beat 03, evidence">
       <Line
         progress={progress}
         start={0.02}
@@ -293,7 +293,7 @@ function Beat04() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={620} sectionRef={ref} label="Beat 04, legitimacy">
+    <BeatShell heightVh={380} sectionRef={ref} label="Beat 04, legitimacy">
       <Line
         progress={progress}
         start={0.01}
@@ -417,7 +417,7 @@ function Beat05() {
         ref={ref}
         aria-label="Beat 05, the name"
         className="relative w-full"
-        style={{ height: `500svh` }}
+        style={{ height: `300svh` }}
       >
         <div className="sticky top-0 flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-5 text-center sm:px-8">
           {/* intro lines: present then cross-fade out */}
