@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { analyze, type AnalysisResult } from "@/lib/api";
 import { AnalyzerInput } from "@/components/analyzer-input";
-import { GalleryTiles } from "@/components/gallery-tiles";
+import { LiveDemo } from "@/components/live-demo/live-demo";
 import { WaitState } from "@/components/wait-state";
 import { ResultsView } from "@/components/results-view";
 import { SiteNav } from "@/components/site-nav";
@@ -65,15 +65,14 @@ export default function Home() {
 
       <AnalyzerFrame cinematic={cinematic} sectionRef={resultsRef}>
         {status === "idle" && (
-          <div className="flex w-full flex-col items-center gap-10">
+          <div className="flex w-full flex-col items-center gap-12">
+            {cinematic && <LiveDemo />}
+            {cinematic && (
+              <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-white sm:text-[13px]">
+                Now try one of yours.
+              </p>
+            )}
             <AnalyzerInput onSubmit={handleAnalyze} />
-            <GalleryTiles
-              onPick={(label) =>
-                handleAnalyze({
-                  text: `Sample: ${label}. This is a placeholder prompt used before the pre-cached gallery is wired up.`,
-                })
-              }
-            />
           </div>
         )}
 
