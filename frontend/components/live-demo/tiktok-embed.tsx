@@ -97,7 +97,7 @@ export function TikTokEmbed({ sourceUrl, uploader, label }: TikTokEmbedProps) {
   return (
     <div
       ref={containerRef}
-      className="relative w-full overflow-hidden rounded-xl"
+      className="relative w-full overflow-hidden rounded-xl [&_iframe]:block [&_iframe]:!w-full [&_iframe]:!max-w-full [&_iframe]:!min-w-0 [&_.tiktok-embed]:!max-w-full [&_.tiktok-embed]:!min-w-0"
       style={{ minHeight: "320px" }}
     >
       <blockquote

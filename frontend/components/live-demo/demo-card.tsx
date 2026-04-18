@@ -70,21 +70,22 @@ export function DemoCard({ index, heading, body, result }: DemoCardProps) {
           </p>
         </header>
 
-        <div className="flex items-baseline justify-between gap-3">
-          <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-500">
-            scroll trap score
-          </span>
-          <span className="flex items-baseline gap-1">
-            <span className="font-heading text-[48px] font-black leading-none text-white sm:text-[60px]">
-              {pct}
+        <div className="flex flex-col gap-4 border-t border-white/5 pt-5">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-500">
+              scroll trap score
             </span>
-            <span className="font-mono text-[11px] text-zinc-500">/ 100</span>
-          </span>
+            <span className="flex items-baseline gap-1">
+              <span className="font-heading text-[52px] font-black leading-none text-white sm:text-[64px]">
+                {pct}
+              </span>
+              <span className="font-mono text-[11px] text-zinc-500">/ 100</span>
+            </span>
+          </div>
+          <Rewrite text={result.rewrite} />
         </div>
 
         <DemoDimensions result={result} />
-
-        <Rewrite text={result.rewrite} />
       </div>
     </motion.article>
   );
@@ -92,17 +93,31 @@ export function DemoCard({ index, heading, body, result }: DemoCardProps) {
 
 function DemoDimensions({ result }: { result: AnalysisResult }) {
   return (
-    <ul className="flex flex-col gap-2.5" aria-label="Per-dimension scores">
+    <ul className="flex flex-col gap-3" aria-label="Per-dimension scores">
       {DIMENSIONS.map((dim) => {
         const raw = result.dimension_scores[dim.key as DimensionKey] ?? 0;
         const present = result.dimension_present[dim.key as DimensionKey] ?? false;
         const pct = Math.round(raw * 100);
         return (
-          <li key={dim.key} className="flex items-center gap-3">
-            <span className="w-[120px] flex-shrink-0 text-[11px] text-zinc-400 sm:text-[12px]">
-              {dim.label}
-            </span>
-            <span className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/5">
+          <li key={dim.key} className="flex flex-col gap-1.5">
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="flex items-center gap-2 text-[11px] text-zinc-300 sm:text-[12px]">
+                <span
+                  aria-hidden
+                  className="h-2 w-2 flex-shrink-0 rounded-full"
+                  style={{
+                    backgroundColor: dim.color,
+                    boxShadow: present ? `0 0 8px ${dim.color}99` : undefined,
+                    opacity: present ? 1 : 0.4,
+                  }}
+                />
+                {dim.label}
+              </span>
+              <span className="font-mono text-[10px] text-zinc-500 sm:text-[11px]">
+                {pct}%
+              </span>
+            </div>
+            <span className="h-1.5 w-full overflow-hidden rounded-full bg-white/5">
               <span
                 className="block h-full rounded-full"
                 style={{
@@ -113,9 +128,6 @@ function DemoDimensions({ result }: { result: AnalysisResult }) {
                 }}
               />
             </span>
-            <span className="w-[40px] flex-shrink-0 text-right font-mono text-[10px] text-zinc-500 sm:text-[11px]">
-              {pct}%
-            </span>
           </li>
         );
       })}
@@ -125,7 +137,7 @@ function DemoDimensions({ result }: { result: AnalysisResult }) {
 
 function Rewrite({ text }: { text: string }) {
   return (
-    <div className="flex flex-col gap-2 border-t border-white/5 pt-5">
+    <div className="flex flex-col gap-2">
       <span className="font-mono text-[10px] uppercase tracking-[0.28em] text-zinc-500">
         see through it
       </span>
