@@ -1,13 +1,61 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
+  useMotionValue,
   useReducedMotion,
-  useScroll,
   useTransform,
   type MotionValue,
 } from "framer-motion";
+
+/**
+ * Custom scroll-progress hook.
+ *
+ * Replaces framer-motion v12's `useScroll({ target, offset: ["start start", "end end"] })`,
+ * which does not update its MotionValue under Next.js 16 Turbopack + React 19. In that
+ * combination the underlying subscription never fires, so every downstream `useTransform`
+ * is stuck at its initial output and inline styles (opacity, filter, transform) never
+ * change as the user scrolls.
+ *
+ * This implementation polls `getBoundingClientRect()` on every animation frame and sets a
+ * MotionValue with a clamped 0..1 progress through the target element. It matches the
+ * semantics of framer-motion's `offset: ["start start", "end end"]`: 0 when the top of
+ * the target aligns with the top of the viewport, 1 when the bottom of the target aligns
+ * with the bottom of the viewport.
+ */
+function useSectionProgress(ref: React.RefObject<HTMLElement | null>): MotionValue<number> {
+  const progress = useMotionValue(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let rafId = 0;
+    let lastValue = -1;
+    const tick = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const travel = rect.height - vh;
+      let p: number;
+      if (travel <= 0) {
+        p = 0;
+      } else if (rect.top >= 0) {
+        p = 0;
+      } else if (rect.top + rect.height <= vh) {
+        p = 1;
+      } else {
+        p = Math.min(1, Math.max(0, -rect.top / travel));
+      }
+      if (p !== lastValue) {
+        lastValue = p;
+        progress.set(p);
+      }
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [ref, progress]);
+  return progress;
+}
 
 export function ScrollManifesto() {
   const reduce = useReducedMotion();
@@ -38,10 +86,12 @@ type LineProps = {
 function Line({ progress, start, end, className, as = "div", children }: LineProps) {
   const opacity = useTransform(progress, [start, end], [0, 1]);
   const y = useTransform(progress, [start, end], [14, 0]);
-  const filter = useTransform(progress, [start, end], ["blur(6px)", "blur(0px)"]);
+  // No blur filter. Mid-scroll states where text is semi-visible plus
+  // semi-blurred read as washed out rather than cinematic. Opacity fade plus
+  // gentle vertical lift is enough.
   const Component = as === "h2" ? motion.h2 : motion.div;
   return (
-    <Component style={{ opacity, y, filter }} className={className}>
+    <Component style={{ opacity, y }} className={className}>
       {children}
     </Component>
   );
@@ -104,10 +154,7 @@ function BeatShell({
 
 function Beat01() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress: progress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  const progress = useSectionProgress(ref);
   return (
     <BeatShell heightVh={220} sectionRef={ref} label="Beat 01, recognition and scale">
       <Line
@@ -140,8 +187,8 @@ function Beat01() {
 
       <Line
         progress={progress}
-        start={0.6}
-        end={0.72}
+        start={0.44}
+        end={0.56}
         className="mt-14 text-[18px] leading-[1.5] text-zinc-200 sm:text-[22px]"
       >
         The average user spends{" "}
@@ -150,15 +197,15 @@ function Beat01() {
       </Line>
       <Line
         progress={progress}
-        start={0.78}
-        end={0.9}
+        start={0.6}
+        end={0.74}
         className="mt-4 text-[18px] leading-[1.5] text-zinc-200 sm:text-[22px]"
       >
         That&rsquo;s almost{" "}
         <span className="font-semibold text-white">24 days a year spent scrolling.</span>
       </Line>
 
-      <Footnote progress={progress} start={0.9}>
+      <Footnote progress={progress} start={0.8}>
         &sup1; Sensor Tower, 2024.
       </Footnote>
     </BeatShell>
@@ -169,10 +216,7 @@ function Beat01() {
 
 function Beat02() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress: progress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  const progress = useSectionProgress(ref);
   return (
     <BeatShell heightVh={300} sectionRef={ref} label="Beat 02, absolution">
       <Line
@@ -211,10 +255,7 @@ function Beat02() {
 
 function Beat03() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress: progress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  const progress = useSectionProgress(ref);
   return (
     <BeatShell heightVh={300} sectionRef={ref} label="Beat 03, evidence">
       <Line
@@ -294,10 +335,7 @@ function Beat03() {
 
 function Beat04() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress: progress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  const progress = useSectionProgress(ref);
   return (
     <BeatShell heightVh={380} sectionRef={ref} label="Beat 04, legitimacy">
       <Line
@@ -392,10 +430,7 @@ function Beat04() {
 
 function Beat05() {
   const ref = useRef<HTMLElement>(null);
-  const { scrollYProgress: progress } = useScroll({
-    target: ref,
-    offset: ["start start", "end end"],
-  });
+  const progress = useSectionProgress(ref);
 
   const introOpacity = useTransform(
     progress,
@@ -409,8 +444,7 @@ function Beat05() {
   );
   const introY1 = useTransform(progress, [0.02, 0.12], [14, 0]);
   const introY2 = useTransform(progress, [0.14, 0.24], [14, 0]);
-  const introFilter1 = useTransform(progress, [0.02, 0.12], ["blur(6px)", "blur(0px)"]);
-  const introFilter2 = useTransform(progress, [0.14, 0.24], ["blur(6px)", "blur(0px)"]);
+  // No blur on intro lines; see Line component comment.
 
   const wordmarkOpacity = useTransform(progress, [0.42, 0.52], [0, 1]);
   const wordmarkY = useTransform(progress, [0.42, 0.52], [20, 0]);
@@ -429,14 +463,14 @@ function Beat05() {
           {/* intro lines: present then cross-fade out */}
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-5 sm:px-8">
             <motion.div
-              style={{ opacity: introOpacity, y: introY1, filter: introFilter1 }}
+              style={{ opacity: introOpacity, y: introY1 }}
               className="max-w-[58ch] font-heading text-[24px] font-semibold leading-[1.2] text-white sm:text-[34px]"
             >
               Most people don&rsquo;t know they&rsquo;re being engineered while
               it&rsquo;s happening.
             </motion.div>
             <motion.div
-              style={{ opacity: introOpacity2, y: introY2, filter: introFilter2 }}
+              style={{ opacity: introOpacity2, y: introY2 }}
               className="mt-4 max-w-[58ch] font-heading text-[24px] font-semibold leading-[1.2] text-white sm:text-[34px]"
             >
               That&rsquo;s by design too.
