@@ -392,7 +392,7 @@ export default function AboutPage() {
             </li>
           </ol>
           <p>
-            The model was trained on roughly 3,500 items sampled from two established clickbait
+            The model was trained on 3,491 items sampled from two established clickbait
             corpora and a small TikTok scrape, all relabeled against the six-dimension rubric.
             That sample size is explicitly small; it would not satisfy a commercial T&amp;S team.
             The full technical report, with metrics, confusion matrices, a noise-robustness
@@ -439,7 +439,7 @@ export default function AboutPage() {
             not a verdict.
           </p>
           <p>
-            <strong className="text-white">It is a small research dataset.</strong> Around 3,500
+            <strong className="text-white">It is a small research dataset.</strong> 3,491
             items, heavily weighted toward English-language clickbait headlines plus a modest
             TikTok scrape. This is enough to compare naive, classical, and deep approaches on a
             fixed rubric. It is not enough to underwrite a commercial moderation product, and I

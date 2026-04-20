@@ -20,11 +20,11 @@ The same techniques are increasingly used for commercial persuasion, health misi
 
 ### 2.1 Webis Clickbait Corpus 2017
 
-Approximately 2,000 tweets annotated for clickbait severity on a continuous scale [3]. This provides the pretraining signal for per-dimension severity, since the Webis labels are ordinal rather than binary.
+1,991 tweets annotated for clickbait severity on a continuous scale [3]. This provides the pretraining signal for per-dimension severity, since the Webis labels are ordinal rather than binary. The source archive (`clickbait17-train-170630.zip`, ~50 MB) is downloaded from the official Zenodo mirror at `https://zenodo.org/records/5530410` under a CC-BY 4.0 license, and `scripts/fetch_datasets.py` decompresses it, parses the per-item JSONL labels, and writes a normalized CSV to `data/raw/webis_clickbait_2017.csv`.
 
 ### 2.2 Stop Clickbait 2016
 
-Approximately 1,500 headlines with binary clickbait labels [4]. Used as weak supervision for the Curiosity Gap and Engagement Bait dimensions. Gzipped; decompressed inline during ingestion.
+1,500 headlines with binary clickbait labels [4], pulled from the public GitHub release at `github.com/bhargaviparanjape/clickbait` (raw `clickbait_data.gz` and `non_clickbait_data.gz` under `dataset/`). Used as weak supervision for the Curiosity Gap and Engagement Bait dimensions. The gzipped archives are decompressed inline by `scripts/fetch_datasets.py`, combined with their positive and negative labels, and written to `data/raw/stop_clickbait.csv`.
 
 ### 2.3 TikTok In-Domain Scrape
 
@@ -32,7 +32,7 @@ Approximately 200 videos pulled via `yt-dlp` from a curated URL list. Each entry
 
 ### 2.4 LLM-Generated Severity Labels
 
-The manipulation rubric is qualitative, and existing datasets carry binary clickbait labels rather than multi-dimensional severity. We used Claude Sonnet 4.5 as a scalable labeling oracle. For each corpus item, the model received a system prompt containing the full 6-dimension rubric with academic citations and severity criteria, eight few-shot examples spanning 0/1/2 severity per dimension, and the item text. The model returned structured JSON with per-dimension severity and a composite score. This approach follows the Constitutional AI / RLAIF lineage [5]: an LLM trained on human-written principles produces labels that a smaller model can be trained on. We treat these labels as a noisy oracle rather than ground truth and validate them against a human gold set (Section 2.6). Total labeled corpus: 3,527 items.
+The manipulation rubric is qualitative, and existing datasets carry binary clickbait labels rather than multi-dimensional severity. We used Claude Sonnet 4.5 as a scalable labeling oracle. For each corpus item, the model received a system prompt containing the full 6-dimension rubric with academic citations and severity criteria, eight few-shot examples spanning 0/1/2 severity per dimension, and the item text. The model returned structured JSON with per-dimension severity and a composite score. This approach follows the Constitutional AI / RLAIF lineage [5]: an LLM trained on human-written principles produces labels that a smaller model can be trained on. We treat these labels as a noisy oracle rather than ground truth and validate them against a human gold set (Section 2.6). Total merged labeled corpus: 3,491 items (1,991 Webis + 1,500 Stop Clickbait, merged by `scripts/build_corpus.py` into `data/processed/corpus.csv`).
 
 ### 2.5 Multimodal Text Extraction
 
@@ -254,7 +254,7 @@ Looking at the per-dimension prediction distributions for these five items:
 
 This error pattern is a textbook distribution-shift problem. Training labels inherit the Stop Clickbait headline distribution, where listicle format is strongly correlated with clickbait. The deployed use case (TikTok captions + transcripts) has a different format distribution where listicle structure is rare and less predictive. The classical model over-fits to the training-distribution confound; the deep model is more robust.
 
-## 11. Experiment: Noise Robustness
+## 11. Experiment: Does the Deep Model Learn Semantic Patterns or Surface Lexicon?
 
 ### 11.1 Experimental Plan
 
@@ -290,7 +290,7 @@ We built and deployed a multimodal system for TikTok manipulation analysis that 
 
 The deep DistilBERT model is the strongest on the headline composite metric (R²=0.37, MAE=5.90) and the only model that explains variance beyond the mean. The classical model wins on per-dimension F1 at the cost of an over-firing composite, and the naive model under-fires in the opposite direction. These differences reflect genuine architectural behaviors rather than noise, and they are visible in the deployed application.
 
-The composite R²=0.37 on a 3,500-item mixed corpus is a real result, not state-of-the-art, but defensible given the label noise inherent to LLM-generated rubric labels at this scale. The noise robustness experiment (composite shift ≤5.4 points at 10% character corruption) supports the claim that the deep model has learned a semantic rather than purely surface-lexical representation.
+The composite R²=0.37 on a 3,491-item mixed corpus is a real result, not state-of-the-art, but defensible given the label noise inherent to LLM-generated rubric labels at this scale. The noise robustness experiment (composite shift ≤5.4 points at 10% character corruption) supports the claim that the deep model has learned a semantic rather than purely surface-lexical representation.
 
 ## 13. Future Work
 
@@ -314,7 +314,7 @@ LUCID as implemented is a research and educational tool. Two deployment paths ar
 
 ### 14.2 Limitations for Commercial Deployment
 
-A composite R² of 0.37 on a 3,500-item corpus is insufficient for any application involving consequential decisions without human review. The following must be disclosed in any commercial deployment:
+A composite R² of 0.37 on a 3,491-item corpus is insufficient for any application involving consequential decisions without human review. The following must be disclosed in any commercial deployment:
 
 - **Sample size.** Commercial clients typically need models trained on 100k+ items with ongoing labeling partnerships.
 - **Cultural scope.** The rubric and labeling were developed in English-language, predominantly US behavioral research. Manipulation norms are culturally situated.

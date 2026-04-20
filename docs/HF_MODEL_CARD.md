@@ -84,7 +84,7 @@ Per-dimension probabilities are trained with binary cross-entropy against rubric
 
 ## Training data
 
-**Total labeled corpus: 3,527 items.**
+**Total labeled corpus: 3,491 items.**
 
 | Source | Approx. size | Purpose |
 |---|---|---|
@@ -206,7 +206,7 @@ https://lucid-seven-pied.vercel.app
 
 3. **Labeling source bias.** Our labels come from a single LLM judge (Claude Sonnet 4.5) validated against a single human annotator. A world where many systems use the same LLM as judge risks *correlated labeling errors*. Multi-model, multi-annotator labeling would be the right long-term direction.
 
-4. **Small corpus.** 3,527 total items is modest for a 6-way multi-label task. Expect higher variance than reported on new distributions.
+4. **Small corpus.** 3,491 total items is modest for a 6-way multi-label task. Expect higher variance than reported on new distributions.
 
 5. **Format–content confounds.** The classical baseline over-fires on listicle-format text because training data (Stop Clickbait) conflates listicle *format* with clickbait *manipulation*. The deep model is more robust but the underlying confound is not fully eliminated.
 

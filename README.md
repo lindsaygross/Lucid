@@ -14,7 +14,7 @@ Final project for Duke AIPI 590 Deep Learning, Spring 2026. Author: Lindsay Gros
 
 ## Quick links
 
-- **Technical report (all required sections):** [`docs/REPORT.md`](docs/REPORT.md)
+- **Technical report (all required sections):** [Google Doc (submission version)](https://docs.google.com/document/d/1axuEqQcHfddCP46WX3QiKmGu9tZhekkwA1Yl2FtKs4c/edit?usp=sharing) · Markdown source in repo at [`docs/REPORT.md`](docs/REPORT.md)
 - **Rubric with citations:** [`docs/RUBRIC.md`](docs/RUBRIC.md)
 - **Dataset survey:** [`docs/DATASETS.md`](docs/DATASETS.md)
 - **Project plan / handoff doc:** [`docs/PLAN.md`](docs/PLAN.md)
