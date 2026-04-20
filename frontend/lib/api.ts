@@ -74,6 +74,7 @@ export type TokenAttribution = {
   token: string;
   position: number;
   attribution: number;
+  count?: number;
 };
 
 export type ExplainResult = {
