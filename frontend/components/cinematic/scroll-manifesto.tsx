@@ -93,14 +93,26 @@ type LineProps = {
 };
 
 function Line({ progress, start, end, className, as = "div", children }: LineProps) {
-  const opacity = useTransform(progress, [start, end], [0, 1]);
-  const y = useTransform(progress, [start, end], [14, 0]);
-  // No blur filter. Mid-scroll states where text is semi-visible plus
-  // semi-blurred read as washed out rather than cinematic. Opacity fade plus
-  // gentle vertical lift is enough.
-  const Component = as === "h2" ? motion.h2 : motion.div;
+  const ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const apply = (p: number) => {
+      const t = Math.min(1, Math.max(0, (p - start) / (end - start)));
+      el.style.opacity = String(t);
+      el.style.transform = `translateY(${14 * (1 - t)}px)`;
+    };
+    apply(progress.get());
+    const unsub = progress.on("change", apply);
+    return unsub;
+  }, [progress, start, end]);
+  const Component = as === "h2" ? "h2" : "div";
   return (
-    <Component style={{ opacity, y }} className={className}>
+    <Component
+      ref={ref as React.Ref<HTMLHeadingElement & HTMLDivElement>}
+      style={{ opacity: 0, transform: "translateY(14px)", willChange: "opacity, transform" }}
+      className={className}
+    >
       {children}
     </Component>
   );
@@ -115,20 +127,28 @@ function Footnote({
   start: number;
   children: React.ReactNode;
 }) {
-  // Clamp the reveal window into [0, 1]. Chrome's Web Animations API rejects
-  // keyframe offsets outside that range with
-  //   "Offsets must be null or in the range [0, 1]"
-  // which crashes the page. Safari was silently tolerant.
-  const safeStart = Math.min(Math.max(start, 0), 1);
-  const safeEnd = Math.min(safeStart + 0.05, 1);
-  const opacity = useTransform(progress, [safeStart, safeEnd], [0, 1]);
+  const ref = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const safeStart = Math.min(Math.max(start, 0), 1);
+    const safeEnd = Math.min(safeStart + 0.05, 1);
+    const apply = (p: number) => {
+      const t = Math.min(1, Math.max(0, (p - safeStart) / (safeEnd - safeStart)));
+      el.style.opacity = String(t);
+    };
+    apply(progress.get());
+    const unsub = progress.on("change", apply);
+    return unsub;
+  }, [progress, start]);
   return (
-    <motion.p
-      style={{ opacity }}
+    <p
+      ref={ref}
+      style={{ opacity: 0 }}
       className="mt-10 max-w-[40ch] text-left font-mono text-[10px] leading-[1.6] tracking-[0.02em] text-zinc-500 sm:text-[11px]"
     >
       {children}
-    </motion.p>
+    </p>
   );
 }
 
@@ -437,28 +457,60 @@ function Beat04() {
 
 /* ---------- Beat 05: the Name + Resolution ---------- */
 
+function interpolateMulti(p: number, stops: number[], values: number[]): number {
+  if (p <= stops[0]) return values[0];
+  if (p >= stops[stops.length - 1]) return values[values.length - 1];
+  for (let i = 0; i < stops.length - 1; i++) {
+    if (p >= stops[i] && p <= stops[i + 1]) {
+      const span = stops[i + 1] - stops[i];
+      const t = span === 0 ? 0 : (p - stops[i]) / span;
+      return values[i] + (values[i + 1] - values[i]) * t;
+    }
+  }
+  return values[values.length - 1];
+}
+
 function Beat05() {
   const ref = useRef<HTMLElement>(null);
   const progress = useSectionProgress(ref);
+  const intro1Ref = useRef<HTMLDivElement>(null);
+  const intro2Ref = useRef<HTMLDivElement>(null);
+  const wordmarkRef = useRef<HTMLHeadingElement>(null);
+  const def1Ref = useRef<HTMLParagraphElement>(null);
+  const def2Ref = useRef<HTMLParagraphElement>(null);
 
-  const introOpacity = useTransform(
-    progress,
-    [0.02, 0.12, 0.3, 0.4],
-    [0, 1, 1, 0],
-  );
-  const introOpacity2 = useTransform(
-    progress,
-    [0.14, 0.24, 0.3, 0.4],
-    [0, 1, 1, 0],
-  );
-  const introY1 = useTransform(progress, [0.02, 0.12], [14, 0]);
-  const introY2 = useTransform(progress, [0.14, 0.24], [14, 0]);
-  // No blur on intro lines; see Line component comment.
-
-  const wordmarkOpacity = useTransform(progress, [0.42, 0.52], [0, 1]);
-  const wordmarkY = useTransform(progress, [0.42, 0.52], [20, 0]);
-  const defOneOpacity = useTransform(progress, [0.62, 0.72], [0, 1]);
-  const defTwoOpacity = useTransform(progress, [0.78, 0.88], [0, 1]);
+  useEffect(() => {
+    const apply = (p: number) => {
+      if (intro1Ref.current) {
+        const op = interpolateMulti(p, [0.02, 0.12, 0.3, 0.4], [0, 1, 1, 0]);
+        const y = 14 * (1 - Math.min(1, Math.max(0, (p - 0.02) / 0.1)));
+        intro1Ref.current.style.opacity = String(op);
+        intro1Ref.current.style.transform = `translateY(${y}px)`;
+      }
+      if (intro2Ref.current) {
+        const op = interpolateMulti(p, [0.14, 0.24, 0.3, 0.4], [0, 1, 1, 0]);
+        const y = 14 * (1 - Math.min(1, Math.max(0, (p - 0.14) / 0.1)));
+        intro2Ref.current.style.opacity = String(op);
+        intro2Ref.current.style.transform = `translateY(${y}px)`;
+      }
+      if (wordmarkRef.current) {
+        const t = Math.min(1, Math.max(0, (p - 0.42) / 0.1));
+        wordmarkRef.current.style.opacity = String(t);
+        wordmarkRef.current.style.transform = `translateY(${20 * (1 - t)}px)`;
+      }
+      if (def1Ref.current) {
+        const t = Math.min(1, Math.max(0, (p - 0.62) / 0.1));
+        def1Ref.current.style.opacity = String(t);
+      }
+      if (def2Ref.current) {
+        const t = Math.min(1, Math.max(0, (p - 0.78) / 0.1));
+        def2Ref.current.style.opacity = String(t);
+      }
+    };
+    apply(progress.get());
+    const unsub = progress.on("change", apply);
+    return unsub;
+  }, [progress]);
 
   return (
     <>
@@ -471,41 +523,46 @@ function Beat05() {
         <div className="sticky top-0 flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-5 text-center sm:px-8">
           {/* intro lines: present then cross-fade out */}
           <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-5 sm:px-8">
-            <motion.div
-              style={{ opacity: introOpacity, y: introY1 }}
+            <div
+              ref={intro1Ref}
+              style={{ opacity: 0, transform: "translateY(14px)", willChange: "opacity, transform" }}
               className="max-w-[58ch] font-heading text-[24px] font-semibold leading-[1.2] text-white sm:text-[34px]"
             >
               Most people don&rsquo;t know they&rsquo;re being engineered while
               it&rsquo;s happening.
-            </motion.div>
-            <motion.div
-              style={{ opacity: introOpacity2, y: introY2 }}
+            </div>
+            <div
+              ref={intro2Ref}
+              style={{ opacity: 0, transform: "translateY(14px)", willChange: "opacity, transform" }}
               className="mt-4 max-w-[58ch] font-heading text-[24px] font-semibold leading-[1.2] text-white sm:text-[34px]"
             >
               That&rsquo;s by design too.
-            </motion.div>
+            </div>
           </div>
 
           {/* wordmark + two definitions */}
-          <motion.h2
-            style={{ opacity: wordmarkOpacity, y: wordmarkY }}
+          <h2
+            ref={wordmarkRef}
+            style={{ opacity: 0, transform: "translateY(20px)", willChange: "opacity, transform" }}
             className="select-none font-heading text-[72px] font-black leading-none tracking-[-0.02em] text-white sm:text-[140px] md:text-[180px]"
           >
             LUCID
-          </motion.h2>
+          </h2>
           <div className="mt-8 flex max-w-[52ch] flex-col gap-4 sm:mt-12 sm:gap-5">
-            <motion.p
-              style={{ opacity: defOneOpacity }}
+            <p
+              ref={def1Ref}
+              style={{ opacity: 0 }}
               className="font-mono text-[13px] italic leading-[1.6] tracking-[0.02em] text-zinc-300 sm:text-[15px]"
             >
               (adj.) able to think clearly, especially in the intervals of confusion.
-            </motion.p>
-            <motion.p
-              style={{ opacity: defTwoOpacity }}
+            </p>
+            <p
+              ref={def2Ref}
+              style={{ opacity: 0 }}
               className="font-mono text-[13px] italic leading-[1.6] tracking-[0.02em] text-zinc-300 sm:text-[15px]"
             >
               (adj.) aware that you are dreaming, while the dream is still happening.
-            </motion.p>
+            </p>
           </div>
         </div>
       </section>
