@@ -1,0 +1,56 @@
+{
+  "outrage_bait": {
+    "spearman_rho": 0.46332089157722184,
+    "spearman_pvalue": 1.2087267243143063e-06,
+    "krippendorff_alpha_ordinal": 0.3884885755955275,
+    "exact_match_accuracy": 0.81,
+    "within_one_accuracy": 0.9,
+    "n": 100
+  },
+  "fomo_trigger": {
+    "spearman_rho": 0.018819480988906116,
+    "spearman_pvalue": 0.8525661746308084,
+    "krippendorff_alpha_ordinal": 0.01890179229354383,
+    "exact_match_accuracy": 0.82,
+    "within_one_accuracy": 0.94,
+    "n": 100
+  },
+  "engagement_bait": {
+    "spearman_rho": 0.4025308662583798,
+    "spearman_pvalue": 3.299437436500648e-05,
+    "krippendorff_alpha_ordinal": 0.3317969576719577,
+    "exact_match_accuracy": 0.81,
+    "within_one_accuracy": 0.95,
+    "n": 100
+  },
+  "emotional_manipulation": {
+    "spearman_rho": -0.05596569682472243,
+    "spearman_pvalue": 0.5802261319968965,
+    "krippendorff_alpha_ordinal": -0.052867188326107595,
+    "exact_match_accuracy": 0.89,
+    "within_one_accuracy": 0.96,
+    "n": 100
+  },
+  "curiosity_gap": {
+    "spearman_rho": 0.23796943818214758,
+    "spearman_pvalue": 0.01711942613085189,
+    "krippendorff_alpha_ordinal": 0.23921023337564695,
+    "exact_match_accuracy": 0.68,
+    "within_one_accuracy": 0.96,
+    "n": 100
+  },
+  "dopamine_design": {
+    "spearman_rho": 0.17644060642892703,
+    "spearman_pvalue": 0.07908368271253399,
+    "krippendorff_alpha_ordinal": 0.1662450592885374,
+    "exact_match_accuracy": 0.84,
+    "within_one_accuracy": 1.0,
+    "n": 100
+  },
+  "_macro": {
+    "mean_spearman": 0.20718593110180997,
+    "mean_krippendorff_alpha": 0.18196257164985097,
+    "mean_exact_match": 0.8083333333333332,
+    "mean_within_one": 0.9516666666666667
+  }
+}

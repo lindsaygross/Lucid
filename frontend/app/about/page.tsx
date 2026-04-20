@@ -92,7 +92,7 @@ export default function AboutPage() {
           </p>
         </header>
 
-        <AboutSection id="hook" eyebrow="§ 01 — the hook" heading="Something is being done to your attention, and you don&rsquo;t have a vocabulary for it.">
+        <AboutSection id="hook" eyebrow="§ 01 — overview" heading="Something is being done to your attention, and you don&rsquo;t have a vocabulary for it.">
           <p>
             Open TikTok at 11 p.m. Close it at 1 a.m. and try to remember what you watched. Most
             people can&rsquo;t. The individual posts blur. What stays is a physical residue: a

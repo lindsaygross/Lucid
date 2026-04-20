@@ -1,0 +1,387 @@
+{
+  "summary": {
+    "naive": {
+      "macro_f1": 0.0,
+      "macro_accuracy": 0.8283333333333333,
+      "composite_mae": 11.66,
+      "composite_rmse": 16.06798058251254,
+      "composite_r2": -1.0383704405495027
+    },
+    "classical": {
+      "macro_f1": 0.25974711503696235,
+      "macro_accuracy": 0.8216666666666667,
+      "composite_mae": 9.69,
+      "composite_rmse": 12.21924711264978,
+      "composite_r2": -0.17882520132638557
+    },
+    "deep": {
+      "macro_f1": 0.1560836961780358,
+      "macro_accuracy": 0.8233333333333334,
+      "composite_mae": 9.12,
+      "composite_rmse": 11.425410277097273,
+      "composite_r2": -0.030633191220590605
+    }
+  },
+  "detailed": {
+    "naive": {
+      "n_test": 100,
+      "composite": {
+        "mae": 11.66,
+        "rmse": 16.06798058251254,
+        "r2": -1.0383704405495027
+      },
+      "per_dimension": {
+        "outrage_bait": {
+          "accuracy": 0.76,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              76,
+              1
+            ],
+            [
+              23,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.23
+        },
+        "fomo_trigger": {
+          "accuracy": 0.89,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              89,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.11
+        },
+        "engagement_bait": {
+          "accuracy": 0.8,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              80,
+              0
+            ],
+            [
+              20,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.2
+        },
+        "emotional_manipulation": {
+          "accuracy": 0.93,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              93,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.07
+        },
+        "curiosity_gap": {
+          "accuracy": 0.7,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              70,
+              0
+            ],
+            [
+              30,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.3
+        },
+        "dopamine_design": {
+          "accuracy": 0.89,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              89,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.11
+        }
+      },
+      "macro_f1": 0.0,
+      "macro_accuracy": 0.8283333333333333
+    },
+    "classical": {
+      "n_test": 100,
+      "composite": {
+        "mae": 9.69,
+        "rmse": 12.21924711264978,
+        "r2": -0.17882520132638557
+      },
+      "per_dimension": {
+        "outrage_bait": {
+          "accuracy": 0.81,
+          "f1": 0.42424242424242425,
+          "precision": 0.7,
+          "recall": 0.30434782608695654,
+          "confusion_matrix": [
+            [
+              74,
+              3
+            ],
+            [
+              16,
+              7
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.23
+        },
+        "fomo_trigger": {
+          "accuracy": 0.85,
+          "f1": 0.11764705882352941,
+          "precision": 0.16666666666666666,
+          "recall": 0.09090909090909091,
+          "confusion_matrix": [
+            [
+              84,
+              5
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.11
+        },
+        "engagement_bait": {
+          "accuracy": 0.84,
+          "f1": 0.42857142857142855,
+          "precision": 0.75,
+          "recall": 0.3,
+          "confusion_matrix": [
+            [
+              78,
+              2
+            ],
+            [
+              14,
+              6
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.2
+        },
+        "emotional_manipulation": {
+          "accuracy": 0.9,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              90,
+              3
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.07
+        },
+        "curiosity_gap": {
+          "accuracy": 0.7,
+          "f1": 0.4827586206896552,
+          "precision": 0.5,
+          "recall": 0.4666666666666667,
+          "confusion_matrix": [
+            [
+              56,
+              14
+            ],
+            [
+              16,
+              14
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.3
+        },
+        "dopamine_design": {
+          "accuracy": 0.83,
+          "f1": 0.10526315789473684,
+          "precision": 0.125,
+          "recall": 0.09090909090909091,
+          "confusion_matrix": [
+            [
+              82,
+              7
+            ],
+            [
+              10,
+              1
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.11
+        }
+      },
+      "macro_f1": 0.25974711503696235,
+      "macro_accuracy": 0.8216666666666667
+    },
+    "deep": {
+      "n_test": 100,
+      "composite": {
+        "mae": 9.12,
+        "rmse": 11.425410277097273,
+        "r2": -0.030633191220590605
+      },
+      "per_dimension": {
+        "outrage_bait": {
+          "accuracy": 0.77,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              77,
+              0
+            ],
+            [
+              23,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.23
+        },
+        "fomo_trigger": {
+          "accuracy": 0.89,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              89,
+              0
+            ],
+            [
+              11,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.11
+        },
+        "engagement_bait": {
+          "accuracy": 0.84,
+          "f1": 0.38461538461538464,
+          "precision": 0.8333333333333334,
+          "recall": 0.25,
+          "confusion_matrix": [
+            [
+              79,
+              1
+            ],
+            [
+              15,
+              5
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.2
+        },
+        "emotional_manipulation": {
+          "accuracy": 0.93,
+          "f1": 0.0,
+          "precision": 0.0,
+          "recall": 0.0,
+          "confusion_matrix": [
+            [
+              93,
+              0
+            ],
+            [
+              7,
+              0
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.07
+        },
+        "curiosity_gap": {
+          "accuracy": 0.63,
+          "f1": 0.3018867924528302,
+          "precision": 0.34782608695652173,
+          "recall": 0.26666666666666666,
+          "confusion_matrix": [
+            [
+              55,
+              15
+            ],
+            [
+              22,
+              8
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.3
+        },
+        "dopamine_design": {
+          "accuracy": 0.88,
+          "f1": 0.25,
+          "precision": 0.4,
+          "recall": 0.18181818181818182,
+          "confusion_matrix": [
+            [
+              86,
+              3
+            ],
+            [
+              9,
+              2
+            ]
+          ],
+          "support": 100,
+          "positive_rate": 0.11
+        }
+      },
+      "macro_f1": 0.1560836961780358,
+      "macro_accuracy": 0.8233333333333334
+    }
+  }
+}

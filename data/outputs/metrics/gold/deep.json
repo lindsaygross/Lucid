@@ -1,0 +1,120 @@
+{
+  "n_test": 100,
+  "composite": {
+    "mae": 9.12,
+    "rmse": 11.425410277097273,
+    "r2": -0.030633191220590605
+  },
+  "per_dimension": {
+    "outrage_bait": {
+      "accuracy": 0.77,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "confusion_matrix": [
+        [
+          77,
+          0
+        ],
+        [
+          23,
+          0
+        ]
+      ],
+      "support": 100,
+      "positive_rate": 0.23
+    },
+    "fomo_trigger": {
+      "accuracy": 0.89,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "confusion_matrix": [
+        [
+          89,
+          0
+        ],
+        [
+          11,
+          0
+        ]
+      ],
+      "support": 100,
+      "positive_rate": 0.11
+    },
+    "engagement_bait": {
+      "accuracy": 0.84,
+      "f1": 0.38461538461538464,
+      "precision": 0.8333333333333334,
+      "recall": 0.25,
+      "confusion_matrix": [
+        [
+          79,
+          1
+        ],
+        [
+          15,
+          5
+        ]
+      ],
+      "support": 100,
+      "positive_rate": 0.2
+    },
+    "emotional_manipulation": {
+      "accuracy": 0.93,
+      "f1": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "confusion_matrix": [
+        [
+          93,
+          0
+        ],
+        [
+          7,
+          0
+        ]
+      ],
+      "support": 100,
+      "positive_rate": 0.07
+    },
+    "curiosity_gap": {
+      "accuracy": 0.63,
+      "f1": 0.3018867924528302,
+      "precision": 0.34782608695652173,
+      "recall": 0.26666666666666666,
+      "confusion_matrix": [
+        [
+          55,
+          15
+        ],
+        [
+          22,
+          8
+        ]
+      ],
+      "support": 100,
+      "positive_rate": 0.3
+    },
+    "dopamine_design": {
+      "accuracy": 0.88,
+      "f1": 0.25,
+      "precision": 0.4,
+      "recall": 0.18181818181818182,
+      "confusion_matrix": [
+        [
+          86,
+          3
+        ],
+        [
+          9,
+          2
+        ]
+      ],
+      "support": 100,
+      "positive_rate": 0.11
+    }
+  },
+  "macro_f1": 0.1560836961780358,
+  "macro_accuracy": 0.8233333333333334
+}

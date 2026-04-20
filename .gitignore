@@ -224,6 +224,12 @@ data/outputs/**
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/outputs/.gitkeep
+# Keep report-referenced evaluation artifacts (figures + metrics + summary JSONs)
+!data/outputs/figures/
+!data/outputs/figures/**
+!data/outputs/metrics/
+!data/outputs/metrics/**
+!data/outputs/*.json
 
 # Model artifacts (use HuggingFace Hub for DistilBERT; keep small classical models)
 models/distilbert/

@@ -173,13 +173,60 @@ The deep model is the strongest on composite prediction — the only model with 
 
 Classical's XGBoost per-dimension heads are aggressive. They fire more often and achieve higher recall, which inflates macro F1 on imbalanced binary labels. The mean-of-dimensions composite then overshoots ground truth, producing a much worse MAE. The deep model's per-dimension probabilities are more calibrated (softer sigmoids) — lower F1 because fewer firings, but tighter composite alignment. The naive model is the opposite failure mode: it under-fires on nearly everything, which gives it a low MAE "for free" on a corpus skewed low-severity, but a macro F1 indistinguishable from zero.
 
-The right model depends on the downstream objective. For the user-facing Scroll Trap Score (the headline composite), the deep model is the clear choice and is the one deployed. For a dimension-level auditor that wants high recall on "is this tactic present at all?", the classical model might be preferable. Per-dimension confusion matrices are available at `data/outputs/figures/` (one per model per dimension).
+The right model depends on the downstream objective. For the user-facing Scroll Trap Score (the headline composite), the deep model is the clear choice and is the one deployed. For a dimension-level auditor that wants high recall on "is this tactic present at all?", the classical model might be preferable.
+
+### 9.1 Gold-set evaluation (n = 100, human-labeled)
+
+Table 3 reports metrics on the primary held-out test split (n = 529), whose labels were produced by Claude Sonnet 4.5 under the same rubric used for training. Because the training labels and test labels share a source, that split measures how well each model has internalized the Claude-labeled distribution. As a tighter check, we re-evaluate all three models on the 100-item human-labeled gold set from §2.6. The ground truth here is hand-assigned by the author rather than the LLM oracle, so disagreements with the model reflect both model error and labeler-vs-oracle disagreement. See §2.6 Table 1 for how those two labelers differ.
+
+**Table 4.** Metrics on the human-labeled gold set (n = 100).
+
+| Model | Macro F1 | Macro Accuracy | Composite MAE | Composite RMSE | Composite R² |
+|---|---|---|---|---|---|
+| Naive | 0.000 | 0.828 | 11.66 | 16.07 | −1.038 |
+| Classical | **0.260** | 0.822 | 9.69 | 12.22 | −0.179 |
+| Deep (DistilBERT) | 0.156 | **0.823** | **9.12** | **11.43** | **−0.031** |
+
+The qualitative ordering is preserved. The deep model is again best on the composite (lowest MAE and RMSE, R² closest to zero). The classical model again wins on macro F1 at a composite-accuracy cost. The naive baseline again under-fires so severely that macro F1 is exactly zero. What shifts is that absolute numbers are uniformly lower than in Table 3: macro F1 drops for classical (0.425 → 0.260) and for deep (0.334 → 0.156), and composite R² goes from mildly positive on the Claude-labeled split to mildly negative on the human-labeled gold set.
+
+Two factors drive the drop. First, the human labeler assigned non-zero labels roughly twice as often as Claude did (§2.6 Table 1), so items that a human called moderate or severe are often predicted absent by models trained on Claude's more conservative label distribution. That shows up as lower recall on rare dimensions and lower composite, both reducing F1 and widening composite error. Second, n = 100 is one-fifth the primary test size, so the metrics are noisier; a few high-error items on a small denominator move the numbers more than they would on 529.
+
+Per-dimension confusion matrices for all three models on the gold set are written to `data/outputs/figures/gold/{naive,classical,deep}/{dimension}_confusion.png` by `python -m scripts.evaluate_gold_set`. Matching JSON metrics (including precision, recall, F1, and the underlying confusion counts) land in `data/outputs/metrics/gold/{model}.json`. Table 5 aggregates the per-dimension F1 across models for quick comparison; the full matrices are in the figures directory.
+
+**Table 5.** Per-dimension F1 on the gold set.
+
+| Dimension | Naive | Classical | Deep |
+|---|---|---|---|
+| Outrage Bait | 0.000 | 0.424 | 0.000 |
+| FOMO Trigger | 0.000 | 0.118 | 0.000 |
+| Engagement Bait | 0.000 | 0.429 | 0.385 |
+| Emotional Manipulation | 0.000 | 0.000 | 0.000 |
+| Curiosity Gap | 0.000 | 0.483 | 0.302 |
+| Dopamine Design | 0.000 | 0.105 | 0.250 |
+
+**Figures 1–6.** Deep-model confusion matrices per dimension on the human-labeled gold set. Rows are true labels, columns are predictions, cell values are counts out of n = 100. These visualize the F1 numbers in Table 5 for the deployed model; matching matrices for the classical and naive models live in `data/outputs/figures/gold/{classical,naive}/`.
+
+![Deep model confusion matrix — Outrage Bait](../data/outputs/figures/gold/deep/outrage_bait_confusion.png)
+
+![Deep model confusion matrix — FOMO Trigger](../data/outputs/figures/gold/deep/fomo_trigger_confusion.png)
+
+![Deep model confusion matrix — Engagement Bait](../data/outputs/figures/gold/deep/engagement_bait_confusion.png)
+
+![Deep model confusion matrix — Emotional Manipulation](../data/outputs/figures/gold/deep/emotional_manipulation_confusion.png)
+
+![Deep model confusion matrix — Curiosity Gap](../data/outputs/figures/gold/deep/curiosity_gap_confusion.png)
+
+![Deep model confusion matrix — Dopamine Design](../data/outputs/figures/gold/deep/dopamine_design_confusion.png)
+
+The recurring pattern across these six matrices is the false-negative corner (true 1, pred 0), which is consistently larger than the false-positive corner. This is the conservative-Claude-prior signature: the model was trained on labels that fire less often than a human does, so on the human-labeled gold set it systematically misses items the human called moderate or severe. Outrage Bait and Emotional Manipulation are the extreme cases, where the model predicts zero positives across the 100 items. Engagement Bait and Curiosity Gap, which had the highest non-zero rates in both label sets, show the strongest positive diagonal and the highest F1.
+
+Together §9 and §9.1 give a consistent picture: the deep model is the strongest composite predictor, the classical model has the most aggressive per-dimension heads, and the naive baseline serves its rubric role as a bottom-of-the-envelope check rather than a competitive model.
 
 ## 10. Error Analysis
 
-We selected the five largest composite-score errors from the classical model's test-set predictions, ranked by `|pred − gold|`. The classical model was chosen rather than the deep model because its failures are more interpretable and more instructive about the underlying distribution-shift problem. All five are false-positive over-fires on listicle-style headlines (Table 4).
+We selected the five largest composite-score errors from the classical model's test-set predictions, ranked by `|pred − gold|`. The classical model was chosen rather than the deep model because its failures are more interpretable and more instructive about the underlying distribution-shift problem. All five are false-positive over-fires on listicle-style headlines (Table 6).
 
-**Table 4.** Worst Classical-Model Mispredictions
+**Table 6.** Worst Classical-Model Mispredictions
 
 | # | Gold | Pred | Err | Text |
 |---|---|---|---|---|
@@ -217,7 +264,7 @@ This error pattern is a textbook distribution-shift problem. Training labels inh
 
 ### 11.2 Results
 
-**Table 5.** Composite Score Shift Under Character Noise
+**Table 7.** Composite Score Shift Under Character Noise
 
 | Noise rate p | Mean \|Δ\| | Median \|Δ\| | Max \|Δ\| |
 |---|---|---|---|
