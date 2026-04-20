@@ -222,6 +222,7 @@ data/raw/**
 data/processed/**
 data/outputs/**
 !data/raw/.gitkeep
+!data/raw/README.md
 !data/processed/.gitkeep
 !data/outputs/.gitkeep
 # Keep report-referenced evaluation artifacts (figures + metrics + summary JSONs)
