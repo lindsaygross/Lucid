@@ -31,6 +31,12 @@ function useSectionProgress(
   const progress = useMotionValue(0);
   useEffect(() => {
     const el = ref.current;
+    if (typeof window !== "undefined") {
+      (window as unknown as Record<string, unknown>)[`__hookFired_${debugKey || "noKey"}`] = {
+        elExists: !!el,
+        refCurrent: el?.tagName,
+      };
+    }
     if (!el) return;
     let rafId = 0;
     let lastValue = -1;
