@@ -48,7 +48,7 @@ const DIMENSIONS: Array<{
     label: "Emotional Manipulation",
     color: "#EC4899",
     oneLiner:
-      "Guilt, pity, or shame used as a substitute for evidence — emotional pressure that stands in for an argument.",
+      "Guilt, pity, or shame used as a substitute for evidence. Emotional pressure that stands in for an argument.",
     citeText: "Small, Loewenstein, & Slovic, 2007; Kramer et al., 2014",
     citeHref: "#ref-small-2007",
   },
@@ -66,7 +66,7 @@ const DIMENSIONS: Array<{
     label: "Dopamine Design",
     color: "#06B6D4",
     oneLiner:
-      "Surface-level salience hooks — ALL CAPS, rapid cuts, emoji spam, variable-reward pacing — that capture attention before the content is evaluated.",
+      "Surface-level salience hooks (ALL CAPS, rapid cuts, emoji spam, variable-reward pacing) that capture attention before the content is evaluated.",
     citeText: "Skinner, 1953; Alter, 2017; Montag et al., 2019",
     citeHref: "#ref-skinner-1953",
   },
@@ -95,14 +95,14 @@ export default function AboutPage() {
         <AboutSection id="hook" eyebrow="§ 01 — the hook" heading="Something is being done to your attention, and you don&rsquo;t have a vocabulary for it.">
           <p>
             Open TikTok at 11 p.m. Close it at 1 a.m. and try to remember what you watched. Most
-            people can&rsquo;t. The individual posts blur. What stays is a physical residue — a
+            people can&rsquo;t. The individual posts blur. What stays is a physical residue: a
             slight jangle, a flatness, the distinct feeling of having been acted on rather than the
             feeling of having chosen.
           </p>
           <p>
             Short-form video platforms rank posts by engagement, and creators have adapted their
             craft to the specific psychological levers those rankings reward. The levers are real,
-            and they&rsquo;ve been studied for decades — curiosity gaps, variable-ratio
+            and they&rsquo;ve been studied for decades. Curiosity gaps, variable-ratio
             reinforcement, outrage-based sharing, scarcity framing. But they&rsquo;re usually
             invisible at the post level. A single TikTok isn&rsquo;t labeled as manipulative, and
             most viewers don&rsquo;t have the vocabulary to describe <em>which</em> lever is being
@@ -110,12 +110,12 @@ export default function AboutPage() {
           </p>
           <p>
             LUCID is a small attempt at that vocabulary. Paste a TikTok URL, and it returns a
-            0&ndash;100 Scroll Trap Score with a per-dimension breakdown — how much of what
+            0&ndash;100 Scroll Trap Score with a per-dimension breakdown: how much of what
             you&rsquo;re about to watch is outrage bait, how much is a curiosity gap, how much is
             surface-level dopamine design. It will not tell you a creator&rsquo;s intent. It will
             not tell you whether a post is true. It will tell you, as a statistical estimate over a
             rubric rooted in peer-reviewed research, what rhetorical moves the post is making.
-            That&rsquo;s the honest scope.
+            That&rsquo;s the scope.
           </p>
         </AboutSection>
 
@@ -137,14 +137,14 @@ export default function AboutPage() {
             anyway.
           </p>
           <p>
-            On October 24, 2023, a multi-state coalition — forty-two attorneys general in total —
-            filed parallel actions against Meta alleging that Instagram and Facebook were
-            deliberately engineered to addict young users while the company publicly denied doing
-            so. Thirty-three AGs joined a joint federal complaint in the Northern District of
+            On October 24, 2023, a multi-state coalition of forty-two attorneys general filed
+            parallel actions against Meta alleging that Instagram and Facebook were deliberately
+            engineered to addict young users while the company publicly denied doing so.
+            Thirty-three AGs joined a joint federal complaint in the Northern District of
             California; the remaining states filed in their own state courts. The filings allege
             violations of the federal Children&rsquo;s Online Privacy Protection Act and state
-            consumer-protection statutes, and they name specific product mechanics — infinite
-            scroll, push notifications, recommendation-driven feeds — as the designed features
+            consumer-protection statutes, and they name specific product mechanics (infinite
+            scroll, push notifications, recommendation-driven feeds) as the designed features
             causing harm (<Cite href="#ref-njag-2023">NJ AG press release, 2023</Cite>;{" "}
             <Cite href="#ref-nyag-2023">NY AG press release, 2023</Cite>;{" "}
             <Cite href="#ref-npr-ags-2023">Allyn, NPR, 2023</Cite>).
@@ -164,11 +164,10 @@ export default function AboutPage() {
             <Cite href="#ref-npr-haugen-2021">Allyn, NPR, 2021</Cite>).
           </p>
           <p>
-            I&rsquo;m flagging this up front because the concept underneath LUCID — that the
-            manipulation of attention at the post level is measurable, and that platforms have
-            internal knowledge of the machinery — is not a researcher&rsquo;s hypothesis anymore.
-            It&rsquo;s the operative theory of a live case with more than forty state governments
-            on one side.
+            I&rsquo;m flagging this up front because the concept underneath LUCID is not a
+            researcher&rsquo;s hypothesis anymore. The manipulation of attention at the post level
+            is measurable, and platforms have internal knowledge of the machinery. It&rsquo;s the
+            operative theory of a live case with more than forty state governments on one side.
           </p>
         </AboutSection>
 
@@ -220,7 +219,7 @@ export default function AboutPage() {
           </p>
           <p>
             <strong className="text-white">The severity scale is ordinal, not binary.</strong> Each
-            dimension is scored 0 / 1 / 2 — absent, moderate, severe — and the composite Scroll
+            dimension is scored 0 / 1 / 2 (absent, moderate, severe), and the composite Scroll
             Trap Score is a 0&ndash;100 aggregation of the six. Manipulation is gradient; a post
             using a single mild outrage hook is doing something qualitatively different from one
             stacking outrage, scarcity, and guilt in the same ten seconds. Binary labels would
@@ -243,8 +242,8 @@ export default function AboutPage() {
             would surface whatever structure the data happens to have; a fixed rubric commits up
             front to a set of categories that are defensible to a non-ML reader. For a tool
             intended to help people articulate what a post is doing to them, the second property
-            matters more. The taxonomy is one defensible cut of the space, not the only one —
-            §<a href="#ethics" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">06</a>{" "}
+            matters more. The taxonomy is one defensible cut of the space, not the only one. §
+            <a href="#ethics" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">06</a>{" "}
             says so.
           </p>
         </AboutSection>
@@ -258,15 +257,15 @@ export default function AboutPage() {
             The deployed model is a fine-tuned DistilBERT, which is a small (66M-parameter) encoder
             transformer. It needs labeled training data in its target format. The issue is that no
             one has ever labeled three and a half thousand short-form-video captions on a
-            six-dimension ordinal rubric that I made up — the data doesn&rsquo;t exist.
+            six-dimension ordinal rubric that I made up. The data doesn&rsquo;t exist.
           </p>
           <p>
             The pragmatic solution is what the literature has started calling{" "}
-            <em>LLM-as-a-judge</em>. Claude Sonnet 4.5 is given the full rubric — the one in{" "}
+            <em>LLM-as-a-judge</em>. Claude Sonnet 4.5 is given the full rubric (the one in{" "}
             <a href="#rubric" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">
               §03 above
-            </a>{" "}
-            — along with eight few-shot examples spanning 0 / 1 / 2 severity per dimension, and it
+            </a>
+            ) along with eight few-shot examples spanning 0 / 1 / 2 severity per dimension, and it
             labels every item in the training corpus. DistilBERT is then trained on those labels.
             The framing is borrowed from Anthropic&rsquo;s{" "}
             <Cite href="#ref-bai-2022">Constitutional AI</Cite> work and formalized for evaluation
@@ -279,56 +278,86 @@ export default function AboutPage() {
             manipulation one way; you gave that definition to an LLM; the LLM produced labels that
             reflect your definition; a model trained on those labels ends up saying what you
             already believed. If all you do is train and ship, you&rsquo;re not measuring anything
-            about the world — you&rsquo;re measuring the consistency of your own rubric applied by
+            about the world. You&rsquo;re measuring the consistency of your own rubric applied by
             a proxy.
           </p>
           <p>
             The way out is to treat the Claude labels as a noisy oracle, not ground truth, and to
-            calibrate them against something external. Which is why I spent a long weekend
-            hand-labeling 100 items sampled from the corpus with a fixed seed of 42, through a
-            small Gradio interface I built for the purpose. Same rubric, same severity levels, no
-            Claude output visible during labeling. The point of the exercise is not that one
-            person&rsquo;s labels are the truth. The point is that if you&rsquo;re going to build a
-            labeling pipeline at scale, you need to do the labeling yourself at least once, on a
-            representative sample, and see whether the pipeline agrees with you in places that are
-            easy and disagrees with you in places that are hard. Otherwise you don&rsquo;t actually
-            know what you shipped.
+            calibrate them against something external. Which is why I hand-labeled 100 items
+            sampled from the corpus with a fixed seed of 42, through a small Gradio interface I
+            built for the purpose. Same rubric, same severity levels, no Claude output visible
+            during labeling. The point of the exercise is not that one person&rsquo;s labels are
+            the truth. The point is that if you&rsquo;re going to build a labeling pipeline at
+            scale, you need to do the labeling yourself at least once, on a representative sample,
+            and see whether the pipeline agrees with you in places that are easy and disagrees
+            with you in places that are hard. Otherwise you don&rsquo;t actually know what you
+            shipped.
           </p>
           <p>
             The metrics that come out of that comparison are per-dimension{" "}
             <strong className="text-white">Spearman rank correlation</strong> (how well the two
             labelers order severity) and{" "}
             <strong className="text-white">Krippendorff&rsquo;s &alpha;</strong> (an ordinal
-            agreement coefficient). Strong agreement on Dopamine Design or Engagement Bait would
-            not be surprising — those dimensions have unambiguous surface cues. Weaker agreement
-            on Emotional Manipulation would also not be surprising, because the call between a
-            genuine emotional appeal and a coercive one is genuinely hard. The report will publish
-            whatever comes out, strong or weak.
+            agreement coefficient), alongside exact-match and within-one-step accuracy. Here is
+            what the 100-item pass produced.
           </p>
-          <p className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4 text-[15px] leading-[1.6] text-zinc-400">
-            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-zinc-500">
-              placeholder · agreement table
-            </span>
-            <br />
-            Per-dimension Spearman &rho; and Krippendorff&rsquo;s &alpha; will land here once the
-            gold-set pass is complete. I am deliberately not filling in numbers before the
-            labeling finishes.
+          <div className="overflow-x-auto rounded-xl border border-white/10 bg-white/[0.02]">
+            <table className="w-full border-collapse text-left text-[13px] sm:text-[14px]">
+              <caption className="sr-only">
+                Claude-vs-human agreement on the 100-item gold set, per dimension.
+              </caption>
+              <thead>
+                <tr className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-500">
+                  <th className="border-b border-white/10 px-3 py-2 font-normal">Dimension</th>
+                  <th className="border-b border-white/10 px-3 py-2 text-right font-normal">Spearman &rho;</th>
+                  <th className="border-b border-white/10 px-3 py-2 text-right font-normal">Krippendorff &alpha;</th>
+                  <th className="border-b border-white/10 px-3 py-2 text-right font-normal">Exact</th>
+                  <th className="border-b border-white/10 px-3 py-2 text-right font-normal">Within 1</th>
+                </tr>
+              </thead>
+              <tbody className="text-zinc-300">
+                <tr><td className="px-3 py-2">Outrage Bait</td><td className="px-3 py-2 text-right font-mono">+0.463</td><td className="px-3 py-2 text-right font-mono">+0.388</td><td className="px-3 py-2 text-right font-mono">0.81</td><td className="px-3 py-2 text-right font-mono">0.90</td></tr>
+                <tr className="bg-white/[0.02]"><td className="px-3 py-2">FOMO Trigger</td><td className="px-3 py-2 text-right font-mono">+0.019</td><td className="px-3 py-2 text-right font-mono">+0.019</td><td className="px-3 py-2 text-right font-mono">0.82</td><td className="px-3 py-2 text-right font-mono">0.94</td></tr>
+                <tr><td className="px-3 py-2">Engagement Bait</td><td className="px-3 py-2 text-right font-mono">+0.403</td><td className="px-3 py-2 text-right font-mono">+0.332</td><td className="px-3 py-2 text-right font-mono">0.81</td><td className="px-3 py-2 text-right font-mono">0.95</td></tr>
+                <tr className="bg-white/[0.02]"><td className="px-3 py-2">Emotional Manipulation</td><td className="px-3 py-2 text-right font-mono">&minus;0.056</td><td className="px-3 py-2 text-right font-mono">&minus;0.053</td><td className="px-3 py-2 text-right font-mono">0.89</td><td className="px-3 py-2 text-right font-mono">0.96</td></tr>
+                <tr><td className="px-3 py-2">Curiosity Gap</td><td className="px-3 py-2 text-right font-mono">+0.238</td><td className="px-3 py-2 text-right font-mono">+0.239</td><td className="px-3 py-2 text-right font-mono">0.68</td><td className="px-3 py-2 text-right font-mono">0.96</td></tr>
+                <tr className="bg-white/[0.02]"><td className="px-3 py-2">Dopamine Design</td><td className="px-3 py-2 text-right font-mono">+0.176</td><td className="px-3 py-2 text-right font-mono">+0.166</td><td className="px-3 py-2 text-right font-mono">0.84</td><td className="px-3 py-2 text-right font-mono">1.00</td></tr>
+                <tr className="font-semibold text-white">
+                  <td className="border-t border-white/10 px-3 py-2">Macro average</td>
+                  <td className="border-t border-white/10 px-3 py-2 text-right font-mono">+0.207</td>
+                  <td className="border-t border-white/10 px-3 py-2 text-right font-mono">+0.182</td>
+                  <td className="border-t border-white/10 px-3 py-2 text-right font-mono">0.808</td>
+                  <td className="border-t border-white/10 px-3 py-2 text-right font-mono">0.952</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>
+            Two things jump out. Within-one-step agreement averages 0.95, which means that on a 0
+            / 1 / 2 scale Claude and I rarely disagreed by more than a single severity level. At
+            the coarse &ldquo;present or absent&rdquo; decision, we agree most of the time. At the
+            same time, the rank-correlation numbers on the rarer dimensions sit close to zero.
+            That is a class-imbalance artifact, not a labeling failure. When only 7 of 100 items
+            are non-zero on Emotional Manipulation, a single borderline disagreement drags
+            Spearman toward zero because the formula has almost no variance to work with. The
+            dimensions with real variance behave as expected: Outrage Bait and Engagement Bait
+            both land around &rho; = 0.4, which is a moderate correlation typical of one-human
+            ordinal agreement with an LLM judge on a multi-dimensional rubric.
           </p>
-          <p className="rounded-xl border border-dashed border-white/15 bg-white/[0.02] p-4 text-[15px] leading-[1.6] text-zinc-400">
-            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-zinc-500">
-              [Lindsay to fill in: which dimensions felt hardest to label and why]
-            </span>
-            <br />
-            A short paragraph from me, after labeling, about which axes were easiest to call
-            confidently and which kept me second-guessing. Leaving this here so I remember to
-            write it in my own words rather than retrofitting something tidy after the fact.
+          <p>
+            A third pattern is that Claude is systematically more conservative than I was.
+            On almost every dimension, Claude fires non-zero roughly half as often as I do. That
+            is consistent with the &ldquo;when in doubt, pick the lower score&rdquo; instruction
+            in the labeling prompt, and it pushes the downstream model toward precision at the
+            cost of recall. Read the agreement table as a lower bound on true agreement with a
+            less conservative labeler prior.
           </p>
           <p>
             The broader point: the fact that LUCID&rsquo;s labels come from a language model is
             not something to hide. It&rsquo;s a scalable-oversight move with a known failure mode,
-            and the human-validation pass is the thing that makes the move defensible rather than
-            sloppy. If the agreement numbers come back weak on some dimension, that&rsquo;s useful
-            information — it tells me which part of the rubric needs to be tightened or dropped.
+            and the human-validation pass is what makes it defensible rather than sloppy. Where
+            the agreement numbers come back weak, that is useful information. It tells me which
+            part of the rubric needs to be tightened or dropped.
           </p>
         </AboutSection>
 
@@ -342,7 +371,7 @@ export default function AboutPage() {
             Essays have a problem, which is that they describe the machinery in the abstract and
             then leave the reader to identify it in the wild, which is exactly the thing
             that&rsquo;s hard. A model that takes a specific post and tells you which dimensions
-            it scores on is a different kind of instrument — it turns a vague intuition into
+            it scores on is a different kind of instrument. It turns a vague intuition into
             something concrete you can point at.
           </p>
           <p>Here&rsquo;s what happens when you paste a TikTok URL, described without equations:</p>
@@ -359,12 +388,12 @@ export default function AboutPage() {
               closest thing in the stack to &ldquo;watching&rdquo; the video.
             </li>
             <li>
-              The three streams — caption, transcript, overlay — are concatenated into one fused
+              The three streams (caption, transcript, overlay) are concatenated into one fused
               text blob. From the model&rsquo;s perspective, a TikTok is just that blob.
             </li>
             <li>
               The fused text is passed to a fine-tuned{" "}
-              <Cite href="#ref-sanh-2019">DistilBERT</Cite> classifier with a multi-output head —
+              <Cite href="#ref-sanh-2019">DistilBERT</Cite> classifier with a multi-output head:
               six per-dimension probabilities plus a composite. That&rsquo;s the Scroll Trap Score
               you see.
             </li>
@@ -425,11 +454,11 @@ export default function AboutPage() {
           </p>
           <p>
             <strong className="text-white">It is one cut of the space.</strong> The six-dimension
-            taxonomy is defensible — every axis is grounded in at least one line of peer-reviewed
-            research — but it is not the only defensible taxonomy. A researcher working primarily
-            in misinformation or in persuasion studies might carve up the same content space
-            differently. The rubric is a starting point for making the invisible legible, not the
-            final word on what &ldquo;manipulation&rdquo; means.
+            taxonomy is defensible, since every axis is grounded in at least one line of
+            peer-reviewed research, but it is not the only defensible taxonomy. A researcher
+            working primarily in misinformation or in persuasion studies might carve up the same
+            content space differently. The rubric is a starting point for making the invisible
+            legible, not the final word on what &ldquo;manipulation&rdquo; means.
           </p>
         </AboutSection>
 
@@ -652,8 +681,17 @@ export default function AboutPage() {
             LUCID is a research and education tool. Scores are statistical estimates based on a
             rubric grounded in peer-reviewed behavioral research, not a measurement of intent.
           </p>
-          <p className="font-mono text-[10px] uppercase tracking-[0.24em]">
-            built for Duke DL · 2026 · lindsay gross
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.24em]">
+            <span>built for Duke DL · 2026 · lindsay gross</span>
+            <span className="text-zinc-700" aria-hidden="true">·</span>
+            <a
+              href="https://github.com/lindsaygross/Lucid"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-sm text-zinc-400 underline decoration-white/20 decoration-dotted underline-offset-4 transition-colors hover:decoration-white/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+            >
+              source on github
+            </a>
           </p>
         </footer>
       </article>

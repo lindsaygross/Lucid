@@ -115,8 +115,17 @@ function Footer() {
           LUCID is a research / education tool. Scores are statistical estimates based on a
           rubric grounded in peer-reviewed behavioral research, not a measurement of intent.
         </p>
-        <p className="font-mono text-[10px] uppercase tracking-[0.22em]">
-          built for Duke DL · 2026 · lindsay gross
+        <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.22em]">
+          <span>built for Duke DL · 2026 · lindsay gross</span>
+          <span className="text-zinc-700" aria-hidden="true">·</span>
+          <a
+            href="https://github.com/lindsaygross/Lucid"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-sm text-zinc-400 underline decoration-white/20 decoration-dotted underline-offset-4 transition-colors hover:decoration-white/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+          >
+            source on github
+          </a>
         </p>
       </div>
     </footer>
