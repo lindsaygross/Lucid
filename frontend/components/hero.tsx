@@ -28,23 +28,31 @@ export function Hero() {
         />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center gap-6 text-center">
+      <div className="relative z-10 flex flex-col items-center gap-5 text-center">
         <LucidLogo className="text-[4rem] leading-none sm:text-[7rem] md:text-[9rem]" />
         <motion.p
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, delay: 1.4, ease: [0.22, 1, 0.36, 1] }}
-          className="max-w-2xl text-balance text-base text-zinc-300 sm:text-lg md:text-xl"
+          transition={{ duration: 1.2, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-2xl text-balance text-sm italic leading-relaxed text-zinc-400 sm:text-base md:text-lg"
         >
-          You&rsquo;re not addicted. You&rsquo;re being engineered.{" "}
-          <span className="bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 bg-clip-text font-semibold text-transparent">
-            See how.
+          <span className="not-italic font-mono text-zinc-500">(adj.)</span> aware
+          you&rsquo;re dreaming, while the dream is still happening.
+        </motion.p>
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, delay: 1.7, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-2xl text-balance text-base font-semibold text-zinc-200 sm:text-lg md:text-xl"
+        >
+          <span className="bg-gradient-to-r from-cyan-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
+            Wake up inside the scroll.
           </span>
         </motion.p>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.8 }}
+          transition={{ duration: 0.8, delay: 2.1 }}
           className="mt-6"
           aria-hidden
         >
