@@ -94,10 +94,9 @@ export default function AboutPage() {
 
         <AboutSection id="hook" eyebrow="§ 01 — overview" heading="Something is being done to your attention, and you don&rsquo;t have a vocabulary for it.">
           <p>
-            Open TikTok at 11 p.m. Close it at 1 a.m. and try to remember what you watched. Most
-            people can&rsquo;t. The individual posts blur. What stays is a physical residue: a
-            slight jangle, a flatness, the distinct feeling of having been acted on rather than the
-            feeling of having chosen.
+            Open TikTok at 11 p.m., close it at 1 a.m., and try to name five things you watched.
+            Most people can&rsquo;t. The posts blur. What&rsquo;s left is the feeling of having
+            been acted on rather than the feeling of having chosen.
           </p>
           <p>
             Short-form video platforms rank posts by engagement, and creators have adapted their
