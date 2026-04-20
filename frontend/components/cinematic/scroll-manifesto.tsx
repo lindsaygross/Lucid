@@ -374,7 +374,7 @@ function Beat04() {
         as="h2"
         className="font-heading text-[22px] font-semibold leading-[1.15] text-white sm:text-[30px]"
       >
-        This is not a complaint anymore.
+        This is beyond argument now.
       </Line>
       <Line
         progress={progress}
@@ -382,7 +382,7 @@ function Beat04() {
         end={0.18}
         className="mt-3 font-heading text-[22px] font-semibold leading-[1.15] text-white sm:text-[30px]"
       >
-        It&rsquo;s the operative theory of a federal case.
+        It&rsquo;s in federal court.
       </Line>
 
       <Line
@@ -403,7 +403,7 @@ function Beat04() {
         end={0.46}
         className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-400 sm:text-[12px]"
       >
-        Multidistrict Litigation No. 3047. Argued in court right now.
+        Multidistrict Litigation No. 3047.
       </Line>
 
       {/* held silence: 0.46 to 0.58 */}
@@ -678,10 +678,10 @@ function StaticManifesto() {
         label="Beat 04, legitimacy"
         body={[
           <p key="l1" className="font-heading text-[24px] font-semibold leading-[1.15] text-white sm:text-[30px]">
-            This is not a complaint anymore.
+            This is beyond argument now.
           </p>,
           <p key="l2" className="font-heading text-[24px] font-semibold leading-[1.15] text-white sm:text-[30px]">
-            It&rsquo;s the operative theory of a federal case.
+            It&rsquo;s in federal court.
           </p>,
           <p key="l3" className="mt-6 text-[16px] leading-[1.55] text-zinc-200 sm:text-[18px]">
             <span className="font-semibold text-white">Forty-two state attorneys general</span>{" "}
@@ -690,7 +690,7 @@ function StaticManifesto() {
             <sup className="ml-0.5 font-mono text-[10px] text-zinc-400">3</sup>
           </p>,
           <p key="l4" className="font-mono text-[12px] uppercase tracking-[0.2em] text-zinc-400 sm:text-[13px]">
-            Multidistrict Litigation No. 3047. Argued in court right now.
+            Multidistrict Litigation No. 3047.
           </p>,
           <blockquote key="q" className="mt-8 flex flex-col gap-3 border-l-2 border-white/40 pl-5 font-heading text-[18px] italic leading-[1.5] text-white sm:text-[22px]">
             <p>
