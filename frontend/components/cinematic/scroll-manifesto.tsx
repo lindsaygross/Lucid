@@ -595,16 +595,7 @@ function ResolutionLines() {
           transition={{ duration: 0.8, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
           className="font-heading text-[22px] font-semibold leading-[1.25] text-white sm:text-[30px]"
         >
-          You can wake up inside it.
-        </motion.p>
-        <motion.p
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "0px 0px -25% 0px" }}
-          transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-6 font-mono text-[12px] uppercase tracking-[0.28em] text-zinc-400 sm:text-[13px]"
-        >
-          Paste a TikTok. See what it&rsquo;s doing to you.
+          So make it a lucid one.
         </motion.p>
       </div>
     </section>
@@ -750,10 +741,7 @@ function StaticManifesto() {
           You can&rsquo;t quit the dream.
         </p>
         <p className="font-heading text-[22px] font-semibold leading-[1.25] text-white sm:text-[28px]">
-          You can wake up inside it.
-        </p>
-        <p className="mt-4 font-mono text-[12px] uppercase tracking-[0.28em] text-zinc-400 sm:text-[13px]">
-          Paste a TikTok. See what it&rsquo;s doing to you.
+          So make it a lucid one.
         </p>
       </div>
     </article>
