@@ -56,7 +56,13 @@ function Footnote({
   start: number;
   children: React.ReactNode;
 }) {
-  const opacity = useTransform(progress, [start, start + 0.05], [0, 1]);
+  // Clamp the reveal window into [0, 1]. Chrome's Web Animations API rejects
+  // keyframe offsets outside that range with
+  //   "Offsets must be null or in the range [0, 1]"
+  // which crashes the page. Safari was silently tolerant.
+  const safeStart = Math.min(Math.max(start, 0), 1);
+  const safeEnd = Math.min(safeStart + 0.05, 1);
+  const opacity = useTransform(progress, [safeStart, safeEnd], [0, 1]);
   return (
     <motion.p
       style={{ opacity }}
