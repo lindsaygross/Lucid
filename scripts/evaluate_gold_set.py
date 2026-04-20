@@ -35,7 +35,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 PROCESSED_DIR = REPO_ROOT / "data" / "processed"
 OUTPUTS_DIR = REPO_ROOT / "data" / "outputs"
 MODELS_DIR = REPO_ROOT / "models"
-DISTILBERT_DIR = REPO_ROOT / "distilbert"
+DISTILBERT_DIR = REPO_ROOT / "models" / "distilbert"
 
 logger = logging.getLogger(__name__)
 

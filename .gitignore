@@ -236,6 +236,9 @@ models/distilbert/
 models/*.bin
 models/*.safetensors
 models/*.pt
+# Stray weight dumps at repo root (canonical location is models/distilbert/)
+/distilbert/
+/distilbert.zip
 !models/.gitkeep
 
 # Scraped media
