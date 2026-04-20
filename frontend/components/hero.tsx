@@ -36,8 +36,8 @@ export function Hero() {
           transition={{ duration: 1.2, delay: 1.2, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-2xl text-balance text-sm italic leading-relaxed text-zinc-400 sm:text-base md:text-lg"
         >
-          <span className="not-italic font-mono text-zinc-500">(adj.)</span> aware
-          you&rsquo;re dreaming, while the dream is still happening.
+          <span className="mr-1.5 not-italic font-mono text-zinc-500">(adj.)</span>
+          aware you&rsquo;re dreaming, while the dream is still happening.
         </motion.p>
         <motion.p
           initial={{ opacity: 0, y: 12 }}
