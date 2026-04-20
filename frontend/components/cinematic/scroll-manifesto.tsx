@@ -38,7 +38,15 @@ type LineProps = {
 function Line({ progress, start, end, className, as = "div", children }: LineProps) {
   const opacity = useTransform(progress, [start, end], [0, 1]);
   const y = useTransform(progress, [start, end], [14, 0]);
-  const filter = useTransform(progress, [start, end], ["blur(6px)", "blur(0px)"]);
+  // Blur clears at ~20% of the reveal window, then holds at 0 for the rest of
+  // the transition. Prevents the "stuck blurry" look when a reader stops
+  // scrolling mid-reveal: by the time the text is readable, it's already crisp.
+  const blurClearAt = start + (end - start) * 0.2;
+  const filter = useTransform(
+    progress,
+    [start, blurClearAt, end],
+    ["blur(4px)", "blur(0px)", "blur(0px)"],
+  );
   const Component = as === "h2" ? motion.h2 : motion.div;
   return (
     <Component style={{ opacity, y, filter }} className={className}>
@@ -109,11 +117,11 @@ function Beat01() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={220} sectionRef={ref} label="Beat 01, recognition and scale">
+    <BeatShell heightVh={140} sectionRef={ref} label="Beat 01, recognition and scale">
       <Line
         progress={progress}
-        start={0.02}
-        end={0.1}
+        start={0}
+        end={0.08}
         as="h2"
         className="font-heading text-[28px] font-semibold leading-[1.15] text-white sm:text-[40px]"
       >
@@ -121,27 +129,27 @@ function Beat01() {
       </Line>
       <Line
         progress={progress}
-        start={0.12}
-        end={0.2}
+        start={0.1}
+        end={0.18}
         className="mt-6 font-heading text-[28px] font-semibold leading-[1.15] text-white sm:text-[40px]"
       >
         You finally put your phone down at 1.
       </Line>
       <Line
         progress={progress}
-        start={0.22}
-        end={0.3}
+        start={0.2}
+        end={0.28}
         className="mt-6 font-heading text-[28px] font-semibold leading-[1.15] text-white sm:text-[40px]"
       >
         You can&rsquo;t remember a single video.
       </Line>
 
-      {/* held silence: 0.30 to 0.55 */}
+      {/* brief held silence: 0.28 to 0.42 */}
 
       <Line
         progress={progress}
-        start={0.6}
-        end={0.72}
+        start={0.44}
+        end={0.56}
         className="mt-14 text-[18px] leading-[1.5] text-zinc-200 sm:text-[22px]"
       >
         The average user spends{" "}
@@ -150,15 +158,15 @@ function Beat01() {
       </Line>
       <Line
         progress={progress}
-        start={0.78}
-        end={0.9}
+        start={0.6}
+        end={0.72}
         className="mt-4 text-[18px] leading-[1.5] text-zinc-200 sm:text-[22px]"
       >
         That&rsquo;s almost{" "}
         <span className="font-semibold text-white">24 days a year spent scrolling.</span>
       </Line>
 
-      <Footnote progress={progress} start={0.9}>
+      <Footnote progress={progress} start={0.78}>
         &sup1; Sensor Tower, 2024.
       </Footnote>
     </BeatShell>
@@ -174,31 +182,31 @@ function Beat02() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={300} sectionRef={ref} label="Beat 02, absolution">
+    <BeatShell heightVh={190} sectionRef={ref} label="Beat 02, absolution">
       <Line
         progress={progress}
-        start={0.04}
-        end={0.18}
+        start={0.05}
+        end={0.22}
         as="h2"
         className="font-heading text-[34px] font-semibold leading-[1.1] text-white sm:text-[56px]"
       >
         This isn&rsquo;t a willpower problem.
       </Line>
 
-      {/* the longest held silence in the manifesto: 0.18 to 0.66 */}
+      {/* the longest held silence in the manifesto: 0.22 to 0.55 */}
 
       <Line
         progress={progress}
-        start={0.72}
-        end={0.82}
+        start={0.58}
+        end={0.72}
         className="mt-10 font-heading text-[22px] font-semibold leading-[1.2] text-white sm:text-[32px]"
       >
         It&rsquo;s a design problem.
       </Line>
       <Line
         progress={progress}
-        start={0.88}
-        end={0.98}
+        start={0.76}
+        end={0.9}
         className="mt-4 font-heading text-[22px] font-semibold leading-[1.2] text-white sm:text-[32px]"
       >
         And the design is working exactly as intended.
@@ -216,30 +224,30 @@ function Beat03() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={300} sectionRef={ref} label="Beat 03, evidence">
+    <BeatShell heightVh={220} sectionRef={ref} label="Beat 03, evidence">
       <Line
         progress={progress}
-        start={0.02}
-        end={0.12}
+        start={0}
+        end={0.08}
         className="text-[20px] leading-[1.4] text-zinc-200 sm:text-[26px]"
       >
         TikTok&rsquo;s own engineers calculated the precise number of videos
       </Line>
       <Line
         progress={progress}
-        start={0.14}
-        end={0.24}
+        start={0.1}
+        end={0.18}
         className="mt-2 text-[20px] leading-[1.4] text-zinc-200 sm:text-[26px]"
       >
         it takes for a user to become addicted.
       </Line>
 
-      {/* held silence: 0.24 to 0.40 */}
+      {/* brief held silence: 0.18 to 0.32 */}
 
       <Line
         progress={progress}
-        start={0.44}
-        end={0.56}
+        start={0.34}
+        end={0.48}
         as="h2"
         className="mt-16 font-heading text-[52px] font-semibold leading-[0.95] tracking-[-0.02em] text-white sm:text-[104px] md:text-[120px]"
       >
@@ -247,42 +255,42 @@ function Beat03() {
       </Line>
       <Line
         progress={progress}
-        start={0.58}
-        end={0.68}
+        start={0.5}
+        end={0.6}
         className="mt-4 font-mono text-[14px] uppercase tracking-[0.24em] text-zinc-400 sm:text-[16px]"
       >
         About thirty-five minutes.
       </Line>
 
-      {/* held silence: 0.68 to 0.78 */}
+      {/* brief held silence: 0.6 to 0.7 */}
 
       <Line
         progress={progress}
-        start={0.8}
-        end={0.86}
+        start={0.72}
+        end={0.8}
         className="mt-16 text-[16px] leading-[1.55] text-zinc-300 sm:text-[18px]"
       >
         The number was in their internal research,
       </Line>
       <Line
         progress={progress}
-        start={0.87}
-        end={0.92}
+        start={0.8}
+        end={0.86}
         className="text-[16px] leading-[1.55] text-zinc-300 sm:text-[18px]"
       >
         made public when Kentucky&rsquo;s attorney general
       </Line>
       <Line
         progress={progress}
-        start={0.92}
-        end={0.97}
+        start={0.86}
+        end={0.92}
         className="text-[16px] leading-[1.55] text-zinc-300 sm:text-[18px]"
       >
         filed an unredacted complaint in October 2024.
         <sup className="ml-0.5 font-mono text-[10px] text-zinc-400">2</sup>
       </Line>
 
-      <Footnote progress={progress} start={0.97}>
+      <Footnote progress={progress} start={0.93}>
         &sup2; Inadvertently unsealed in <em>Commonwealth of Kentucky v. TikTok Inc.</em>,
         October 2024. Reporting: NPR, Washington Post, CNN.
       </Footnote>
@@ -299,10 +307,10 @@ function Beat04() {
     offset: ["start start", "end end"],
   });
   return (
-    <BeatShell heightVh={380} sectionRef={ref} label="Beat 04, legitimacy">
+    <BeatShell heightVh={250} sectionRef={ref} label="Beat 04, legitimacy">
       <Line
         progress={progress}
-        start={0.01}
+        start={0}
         end={0.08}
         as="h2"
         className="font-heading text-[22px] font-semibold leading-[1.15] text-white sm:text-[30px]"
@@ -320,8 +328,8 @@ function Beat04() {
 
       <Line
         progress={progress}
-        start={0.24}
-        end={0.36}
+        start={0.22}
+        end={0.32}
         className="mt-8 text-[15px] leading-[1.55] text-zinc-200 sm:text-[17px]"
       >
         <span className="font-semibold text-white">Forty-two state attorneys general</span>{" "}
@@ -332,19 +340,19 @@ function Beat04() {
 
       <Line
         progress={progress}
-        start={0.38}
-        end={0.46}
+        start={0.34}
+        end={0.42}
         className="mt-5 font-mono text-[11px] uppercase tracking-[0.2em] text-zinc-400 sm:text-[12px]"
       >
         Multidistrict Litigation No. 3047. Argued in court right now.
       </Line>
 
-      {/* held silence: 0.46 to 0.58 */}
+      {/* brief held silence: 0.42 to 0.5 */}
 
       <Line
         progress={progress}
-        start={0.58}
-        end={0.68}
+        start={0.52}
+        end={0.62}
         className="mt-10 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[17px] italic leading-[1.5] text-white sm:text-[21px]"
       >
         &ldquo;No one wakes up thinking they want to maximize the number of times they
@@ -352,8 +360,8 @@ function Beat04() {
       </Line>
       <Line
         progress={progress}
-        start={0.68}
-        end={0.76}
+        start={0.62}
+        end={0.72}
         className="mt-3 max-w-[55ch] border-l-2 border-white/40 pl-5 font-heading text-[17px] italic leading-[1.5] text-white sm:text-[21px]"
       >
         But that&rsquo;s exactly what our product teams are trying to do.&rdquo;
@@ -361,23 +369,23 @@ function Beat04() {
 
       <Line
         progress={progress}
-        start={0.78}
-        end={0.86}
+        start={0.74}
+        end={0.82}
         className="mt-5 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-white sm:text-[12px]"
       >
         Max Eulenstein, Vice President of Product, Meta.
       </Line>
       <Line
         progress={progress}
-        start={0.86}
-        end={0.92}
+        start={0.82}
+        end={0.88}
         className="font-mono text-[11px] uppercase tracking-[0.22em] text-zinc-400 sm:text-[12px]"
       >
         Internal email, January 2021.
         <sup className="ml-0.5 text-[10px] text-zinc-400">4</sup>
       </Line>
 
-      <Footnote progress={progress} start={0.94}>
+      <Footnote progress={progress} start={0.9}>
         &sup3; Attorneys General of CA, NY, NJ, et al. v. Meta Platforms Inc., October
         24, 2023.
         <br />
@@ -397,25 +405,34 @@ function Beat05() {
     offset: ["start start", "end end"],
   });
 
+  // Intro lines: fade in, hold, fade out. Blur clears early (20% into fade-in).
   const introOpacity = useTransform(
     progress,
-    [0.02, 0.12, 0.3, 0.4],
+    [0, 0.1, 0.22, 0.3],
     [0, 1, 1, 0],
   );
   const introOpacity2 = useTransform(
     progress,
-    [0.14, 0.24, 0.3, 0.4],
+    [0.12, 0.22, 0.26, 0.34],
     [0, 1, 1, 0],
   );
-  const introY1 = useTransform(progress, [0.02, 0.12], [14, 0]);
-  const introY2 = useTransform(progress, [0.14, 0.24], [14, 0]);
-  const introFilter1 = useTransform(progress, [0.02, 0.12], ["blur(6px)", "blur(0px)"]);
-  const introFilter2 = useTransform(progress, [0.14, 0.24], ["blur(6px)", "blur(0px)"]);
+  const introY1 = useTransform(progress, [0, 0.1], [14, 0]);
+  const introY2 = useTransform(progress, [0.12, 0.22], [14, 0]);
+  const introFilter1 = useTransform(
+    progress,
+    [0, 0.02, 0.1],
+    ["blur(4px)", "blur(0px)", "blur(0px)"],
+  );
+  const introFilter2 = useTransform(
+    progress,
+    [0.12, 0.14, 0.22],
+    ["blur(4px)", "blur(0px)", "blur(0px)"],
+  );
 
-  const wordmarkOpacity = useTransform(progress, [0.42, 0.52], [0, 1]);
-  const wordmarkY = useTransform(progress, [0.42, 0.52], [20, 0]);
-  const defOneOpacity = useTransform(progress, [0.62, 0.72], [0, 1]);
-  const defTwoOpacity = useTransform(progress, [0.78, 0.88], [0, 1]);
+  const wordmarkOpacity = useTransform(progress, [0.38, 0.48], [0, 1]);
+  const wordmarkY = useTransform(progress, [0.38, 0.48], [20, 0]);
+  const defOneOpacity = useTransform(progress, [0.54, 0.64], [0, 1]);
+  const defTwoOpacity = useTransform(progress, [0.68, 0.78], [0, 1]);
 
   return (
     <>
@@ -423,7 +440,7 @@ function Beat05() {
         ref={ref}
         aria-label="Beat 05, the name"
         className="relative w-full"
-        style={{ height: `300svh` }}
+        style={{ height: `200svh` }}
       >
         <div className="sticky top-0 flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden px-5 text-center sm:px-8">
           {/* intro lines: present then cross-fade out */}
