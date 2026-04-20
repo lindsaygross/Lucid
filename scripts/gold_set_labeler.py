@@ -179,6 +179,12 @@ def main() -> None:
     parser.add_argument("--n", type=int, default=100)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--port", type=int, default=7860)
+    parser.add_argument(
+        "--share",
+        action="store_true",
+        help="Expose the app via a public gradio.live URL (valid ~72h). "
+        "Keep this terminal running; closing it kills the link.",
+    )
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -200,7 +206,7 @@ def main() -> None:
     logger.info("saving labels to: %s", ", ".join(str(p) for p in output_paths))
 
     app = build_app(items, labels, output_paths)
-    app.launch(server_port=args.port)
+    app.launch(server_port=args.port, share=args.share)
 
 
 if __name__ == "__main__":

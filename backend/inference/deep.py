@@ -218,15 +218,37 @@ class DeepPredictor:
         per_dim: dict[str, list[dict]] = {}
         for i, dim in enumerate(DIMENSIONS):
             scores = token_attr[i].cpu().tolist()
-            candidates: list[dict] = []
+            # Aggregate by unique (lowercased) token so the top-K reflects
+            # distinct words rather than repeated occurrences of the same
+            # high-frequency token. Attribution is summed across occurrences
+            # (total contribution to the logit); position anchors on the
+            # strongest-magnitude occurrence for UI highlighting.
+            groups: dict[str, dict] = {}
             for pos, (tok, s) in enumerate(zip(tokens, scores)):
                 if tok in ("[CLS]", "[SEP]", "[PAD]"):
                     continue
-                candidates.append({
-                    "token": tok.replace("##", ""),
-                    "position": pos,
-                    "attribution": float(s),
-                })
+                clean = tok.replace("##", "")
+                key = clean.lower()
+                attr = float(s)
+                entry = groups.get(key)
+                if entry is None:
+                    groups[key] = {
+                        "token": clean,
+                        "position": pos,
+                        "attribution": attr,
+                        "count": 1,
+                        "_peak_abs": abs(attr),
+                    }
+                else:
+                    entry["attribution"] += attr
+                    entry["count"] += 1
+                    if abs(attr) > entry["_peak_abs"]:
+                        entry["_peak_abs"] = abs(attr)
+                        entry["position"] = pos
+                        entry["token"] = clean
+            candidates = list(groups.values())
+            for entry in candidates:
+                entry.pop("_peak_abs", None)
             candidates.sort(key=lambda r: abs(r["attribution"]), reverse=True)
             per_dim[dim] = candidates[:top_k]
 
