@@ -41,19 +41,11 @@ export function Hero() {
             See how.
           </span>
         </motion.p>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 1.8 }}
-          className="mt-2 font-mono text-[11px] uppercase tracking-[0.3em] text-zinc-500"
-        >
-          paste a tiktok ↓
-        </motion.p>
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 2.2 }}
-          className="mt-2"
+          transition={{ duration: 0.8, delay: 1.8 }}
+          className="mt-6"
           aria-hidden
         >
           <svg
