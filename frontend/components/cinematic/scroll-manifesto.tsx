@@ -24,14 +24,19 @@ import {
  * the target aligns with the top of the viewport, 1 when the bottom of the target aligns
  * with the bottom of the viewport.
  */
-function useSectionProgress(ref: React.RefObject<HTMLElement | null>): MotionValue<number> {
+function useSectionProgress(
+  ref: React.RefObject<HTMLElement | null>,
+  debugKey?: string,
+): MotionValue<number> {
   const progress = useMotionValue(0);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     let rafId = 0;
     let lastValue = -1;
+    let tickCount = 0;
     const tick = () => {
+      tickCount++;
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
       const travel = rect.height - vh;
@@ -49,11 +54,15 @@ function useSectionProgress(ref: React.RefObject<HTMLElement | null>): MotionVal
         lastValue = p;
         progress.set(p);
       }
+      if (debugKey && typeof window !== "undefined") {
+        const w = window as unknown as Record<string, unknown>;
+        w[`__lucidDebug_${debugKey}`] = { progress, ticks: tickCount, lastP: p };
+      }
       rafId = requestAnimationFrame(tick);
     };
     rafId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(rafId);
-  }, [ref, progress]);
+  }, [ref, progress, debugKey]);
   return progress;
 }
 
@@ -154,7 +163,7 @@ function BeatShell({
 
 function Beat01() {
   const ref = useRef<HTMLElement>(null);
-  const progress = useSectionProgress(ref);
+  const progress = useSectionProgress(ref, "beat1");
   return (
     <BeatShell heightVh={220} sectionRef={ref} label="Beat 01, recognition and scale">
       <Line
