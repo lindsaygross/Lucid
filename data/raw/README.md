@@ -6,10 +6,10 @@ This directory holds the pretraining corpora LUCID ingests before rubric labelin
 
 | File | Source | Size | How to fetch |
 |---|---|---|---|
-| `webis_clickbait_2017.csv` | [Webis Clickbait Corpus 2017](https://webis.de/data/webis-clickbait-17.html) (Potthast et al.) | ~600 KB (normalized) | `scripts.fetch_datasets` downloads `clickbait17-train-170630.zip` (~50 MB) from the official [Zenodo mirror](https://zenodo.org/records/5530410), parses the per-item JSONL labels, and writes a normalized CSV. License: CC-BY 4.0. |
-| `stop_clickbait.csv` | [Stop Clickbait 2016](https://github.com/bhargaviparanjape/clickbait) (Chakraborty et al.) | ~100 KB | `scripts.fetch_datasets` downloads the gzipped `clickbait_data.gz` and `non_clickbait_data.gz` from the public GitHub release, decompresses inline, labels each line, and writes a combined CSV. |
+| `webis_clickbait_2017.csv` | [Webis Clickbait Corpus 2017](https://webis.de/data/webis-clickbait-17.html) | ~600 KB | `scripts.fetch_datasets` downloads `clickbait17-train-170630.zip` from the official [Zenodo mirror](https://zenodo.org/records/5530410), parses the per-item JSONL labels, and writes a normalized CSV. License: CC-BY 4.0. |
+| `stop_clickbait.csv` | [Stop Clickbait 2016](https://github.com/bhargaviparanjape/clickbait) | ~100 KB | `scripts.fetch_datasets` downloads the gzipped `clickbait_data.gz` and `non_clickbait_data.gz` from the public GitHub release, decompresses inline, labels each line, and writes a combined CSV. |
 
-`scripts.scrape_reddit` and `scripts.scrape_tiktok` additionally populate Reddit and TikTok samples under this directory when run. These are not part of the default merged corpus (the deployed DistilBERT was trained on Webis + Stop Clickbait only); the TikTok scrape is used for the pre-cached demo gallery, not training.
+`scripts.scrape_reddit` and `scripts.scrape_tiktok` additionally populate Reddit and TikTok samples under this directory when run. These are not part of the default merged corpus. The deployed DistilBERT was trained on Webis + Stop Clickbait only, and the TikTok scrape is used for the pre-cached demo gallery rather than training.
 
 ## Regenerating
 
@@ -18,12 +18,12 @@ From the repo root:
 ```bash
 make data          # runs all three: fetch_datasets, scrape_reddit, scrape_tiktok
 # or individually:
-python -m scripts.fetch_datasets   # Webis + Stop Clickbait (offline-safe; re-downloadable)
-python -m scripts.scrape_reddit    # needs REDDIT_CLIENT_ID + REDDIT_CLIENT_SECRET in .env
-python -m scripts.scrape_tiktok    # reads scripts/tiktok_urls.txt via yt-dlp
+python -m scripts.fetch_datasets
+python -m scripts.scrape_reddit
+python -m scripts.scrape_tiktok
 ```
 
-After `make data`, run `make corpus` to merge the raw sources into `data/processed/corpus.csv` (3,491 items in the current build). The next stage is `make label` to run Claude Sonnet 4.5 over that merged corpus, producing the labels DistilBERT trains on.
+After `make data`, run `make corpus` to merge the raw sources into `data/processed/corpus.csv`. The merged corpus is 3,491 items in the current build. The next stage is `make label` to run Claude Sonnet 4.5 over that merged corpus, producing the labels DistilBERT trains on.
 
 ## Why the raw data isn't committed
 
