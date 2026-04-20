@@ -26,30 +26,18 @@ import {
  */
 function useSectionProgress(
   ref: React.RefObject<HTMLElement | null>,
-  debugKey?: string,
 ): MotionValue<number> {
   const progress = useMotionValue(0);
   useEffect(() => {
     const el = ref.current;
-    if (typeof window !== "undefined") {
-      (window as unknown as Record<string, unknown>)[`__hookFired_${debugKey || "noKey"}`] = {
-        elExists: !!el,
-        refCurrent: el?.tagName,
-      };
-    }
     if (!el) return;
-    let rafId = 0;
     let lastValue = -1;
-    let tickCount = 0;
-    const tick = () => {
-      tickCount++;
+    const update = () => {
       const rect = el.getBoundingClientRect();
       const vh = window.innerHeight;
       const travel = rect.height - vh;
       let p: number;
-      if (travel <= 0) {
-        p = 0;
-      } else if (rect.top >= 0) {
+      if (travel <= 0 || rect.top >= 0) {
         p = 0;
       } else if (rect.top + rect.height <= vh) {
         p = 1;
@@ -60,15 +48,21 @@ function useSectionProgress(
         lastValue = p;
         progress.set(p);
       }
-      if (debugKey && typeof window !== "undefined") {
-        const w = window as unknown as Record<string, unknown>;
-        w[`__lucidDebug_${debugKey}`] = { progress, ticks: tickCount, lastP: p };
-      }
-      rafId = requestAnimationFrame(tick);
     };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [ref, progress, debugKey]);
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    // Safety-net polling interval: catches cases where scroll events don't
+    // fire (programmatic scroll, Chrome scroll-anchoring interactions,
+    // tab-focus edge cases). 50ms is ~20fps which is plenty for a scroll
+    // reveal animation and uses trivial CPU.
+    const interval = setInterval(update, 50);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+      clearInterval(interval);
+    };
+  }, [ref, progress]);
   return progress;
 }
 
@@ -169,7 +163,7 @@ function BeatShell({
 
 function Beat01() {
   const ref = useRef<HTMLElement>(null);
-  const progress = useSectionProgress(ref, "beat1");
+  const progress = useSectionProgress(ref);
   return (
     <BeatShell heightVh={220} sectionRef={ref} label="Beat 01, recognition and scale">
       <Line
