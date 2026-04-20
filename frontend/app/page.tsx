@@ -68,9 +68,14 @@ export default function Home() {
           <div className="flex w-full flex-col items-center gap-12">
             {cinematic && <LiveDemo />}
             {cinematic && (
-              <p className="font-mono text-[12px] uppercase tracking-[0.32em] text-white sm:text-[13px]">
-                Now try one of yours.
-              </p>
+              <header className="mt-10 flex w-full flex-col items-center gap-3 border-t border-white/5 pt-16 text-center sm:mt-14 sm:pt-20">
+                <span className="font-mono text-[10px] uppercase tracking-[0.32em] text-zinc-500 sm:text-[11px]">
+                  your turn
+                </span>
+                <p className="max-w-[46ch] font-heading text-[20px] font-semibold leading-[1.3] text-white sm:text-[24px]">
+                  Pick a post. See how it&rsquo;s engineered.
+                </p>
+              </header>
             )}
             <AnalyzerInput onSubmit={handleAnalyze} />
           </div>
