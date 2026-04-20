@@ -1,6 +1,6 @@
 # LUCID
 
-> You're not addicted. You're being engineered. See how.
+> *(adj.)* aware you're dreaming, while the dream is still happening. **Wake up inside the scroll.**
 
 LUCID analyzes short-form video manipulation. Paste a TikTok URL, get a **Scroll Trap Score** (0–100) plus a per-dimension breakdown across six psychological manipulation dimensions (Outrage Bait, FOMO Trigger, Engagement Bait, Emotional Manipulation, Curiosity Gap, Dopamine Design) plus a "See Through It" rewrite that shows the same information stripped of manipulation.
 
