@@ -115,7 +115,6 @@ export default function AboutPage() {
             surface-level dopamine design. It will not tell you a creator&rsquo;s intent. It will
             not tell you whether a post is true. It will tell you, as a statistical estimate over a
             rubric rooted in peer-reviewed research, what rhetorical moves the post is making.
-            That&rsquo;s the scope.
           </p>
         </AboutSection>
 
@@ -166,8 +165,8 @@ export default function AboutPage() {
           <p>
             I&rsquo;m flagging this up front because the concept underneath LUCID is not a
             researcher&rsquo;s hypothesis anymore. The manipulation of attention at the post level
-            is measurable, and platforms have internal knowledge of the machinery. It&rsquo;s the
-            operative theory of a live case with more than forty state governments on one side.
+            is measurable, and platforms have internal knowledge of the machinery. It&rsquo;s a
+            live federal case with more than forty state governments on one side.
           </p>
         </AboutSection>
 
@@ -232,19 +231,16 @@ export default function AboutPage() {
             LUCID evaluates what the post is <em>doing</em> at the level of fused caption, audio
             transcript, and on-screen overlay. It does not claim to measure intent, and it
             doesn&rsquo;t try to. A nonprofit using emotional appeals to recruit foster parents and
-            a grifter using the same techniques for an info-product will both score high on
+            a con artist using the same techniques for an info-product will both score high on
             Emotional Manipulation, because the rhetorical move is the same on the page. The
-            judgment about intent is the reader&rsquo;s. This distinction matters enough to state
-            plainly, and it&rsquo;s repeated in the footer of the main app.
+            judgment about intent is the reader&rsquo;s.
           </p>
           <p>
             Finally, a note on why the rubric is fixed rather than learned. A clustering approach
             would surface whatever structure the data happens to have; a fixed rubric commits up
             front to a set of categories that are defensible to a non-ML reader. For a tool
             intended to help people articulate what a post is doing to them, the second property
-            matters more. The taxonomy is one defensible cut of the space, not the only one. §
-            <a href="#ethics" className="underline decoration-white/20 decoration-dotted underline-offset-4 hover:decoration-white/60">06</a>{" "}
-            says so.
+            matters more. The taxonomy is one defensible cut of the space, not the only one.
           </p>
         </AboutSection>
 
@@ -333,7 +329,7 @@ export default function AboutPage() {
             </table>
           </div>
           <p>
-            Two things jump out. Within-one-step agreement averages 0.95, which means that on a 0
+            Two things stand out. Within-one-step agreement averages 0.95, which means that on a 0
             / 1 / 2 scale Claude and I rarely disagreed by more than a single severity level. At
             the coarse &ldquo;present or absent&rdquo; decision, we agree most of the time. At the
             same time, the rank-correlation numbers on the rarer dimensions sit close to zero.
@@ -353,11 +349,11 @@ export default function AboutPage() {
             less conservative labeler prior.
           </p>
           <p>
-            The broader point: the fact that LUCID&rsquo;s labels come from a language model is
-            not something to hide. It&rsquo;s a scalable-oversight move with a known failure mode,
-            and the human-validation pass is what makes it defensible rather than sloppy. Where
-            the agreement numbers come back weak, that is useful information. It tells me which
-            part of the rubric needs to be tightened or dropped.
+            The broader point: If LUCID&rsquo;s labels came solely from a language model this
+            would be a scalable-oversight move with a known failure mode, and the human-validation
+            pass is what makes it defensible. Where the agreement numbers come back weak, that is
+            useful information. It shows which part of the rubric needs to be tightened or
+            dropped.
           </p>
         </AboutSection>
 
@@ -367,12 +363,10 @@ export default function AboutPage() {
           heading="What the pipeline actually does when you paste a URL."
         >
           <p>
-            I could have written this as an essay. A lot of media-literacy work is essays.
-            Essays have a problem, which is that they describe the machinery in the abstract and
-            then leave the reader to identify it in the wild, which is exactly the thing
-            that&rsquo;s hard. A model that takes a specific post and tells you which dimensions
-            it scores on is a different kind of instrument. It turns a vague intuition into
-            something concrete you can point at.
+            Most media-literacy work is essays. Essays describe the machinery in the abstract and
+            leave you to spot it in the wild, which is the hard part. A model that scores a
+            specific post on specific dimensions turns a vague intuition into something you can
+            point at.
           </p>
           <p>Here&rsquo;s what happens when you paste a TikTok URL, described without equations:</p>
           <ol className="flex list-decimal flex-col gap-3 pl-5 marker:font-mono marker:text-[12px] marker:text-zinc-500">
@@ -400,7 +394,7 @@ export default function AboutPage() {
           </ol>
           <p>
             The model was trained on roughly 3,500 items sampled from two established clickbait
-            corpora and a small TikTok scrape, all relabeled against our six-dimension rubric.
+            corpora and a small TikTok scrape, all relabeled against the six-dimension rubric.
             That sample size is explicitly small; it would not satisfy a commercial T&amp;S team.
             The full technical report, with metrics, confusion matrices, a noise-robustness
             experiment, and an error analysis, lives in the{" "}
