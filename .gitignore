@@ -232,7 +232,8 @@ data/outputs/**
 !data/outputs/*.json
 
 # Model artifacts (use HuggingFace Hub for DistilBERT; keep small classical models)
-models/distilbert/
+models/distilbert/*
+!models/distilbert/README.md
 models/*.bin
 models/*.safetensors
 models/*.pt
