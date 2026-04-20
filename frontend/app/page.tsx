@@ -116,7 +116,7 @@ function Footer() {
           rubric grounded in peer-reviewed behavioral research, not a measurement of intent.
         </p>
         <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.22em]">
-          <span>built for Duke DL · 2026 · lindsay gross</span>
+          <span>Built by Lindsay Gross · 2026</span>
           <span className="text-zinc-700" aria-hidden="true">·</span>
           <a
             href="https://github.com/lindsaygross/Lucid"
