@@ -248,7 +248,7 @@ export default function AboutPage() {
         <AboutSection
           id="labels"
           eyebrow="§ 04 — how the labels were made"
-          heading="And why, at some point, I sat down and hand-labeled a hundred of them myself."
+          heading="And why I sat down and hand-labeled a hundred of them myself."
         >
           <p>
             The deployed model is a fine-tuned DistilBERT, which is a small (66M-parameter) encoder
