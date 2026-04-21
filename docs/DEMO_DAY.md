@@ -1,6 +1,6 @@
 # LUCID — Demo Day deck outline
 
-> 5-minute pitch, startup-accelerator style. Hard stop at 5:00.
+> 4-minute pitch, startup-accelerator style. Hard stop at 4:00.
 
 **How to use this doc:** each section below is one slide. Under each slide you'll find (a) the **visual guidance** for Canva, (b) the **spoken script** — the exact words to say, timed so the whole deck fits in 5 minutes — and (c) any **asset references** to pull from the repo.
 
@@ -19,21 +19,20 @@
 
 ---
 
-## Slide 1 — Title (≈ 15 s)
+## Slide 1 — Title (≈ 10 s)
 
 **Visual:** Full-bleed black. LUCID wordmark centered (letter-by-letter drop if your slide tool supports; static is fine). Tagline one line below in secondary gray. Small mono subline at bottom: `duke aipi 590 · spring 2026 · lindsay gross`.
 
 **Script:**
 
-> "LUCID. You're not addicted. You're being engineered. See how.
-> I'm Lindsay Gross. I come out of trust and safety, and this is a tool I built to make the scroll legible."
+> "LUCID. You're not addicted — you're being engineered. I'm Lindsay Gross. I come out of trust and safety, and this is a tool I built to make the scroll legible at the post level."
 
 **Assets:**
 - Wordmark: use the `LUCID` letter style from `frontend/components/lucid-logo.tsx` (font-heading, black weight, tracking-tight) — or just set it in Canva directly, it's simple type.
 
 ---
 
-## Slide 2 — Problem & Motivation (≈ 55 s)
+## Slide 2 — Problem & Motivation (≈ 40 s)
 
 **Visual:** Left two-thirds: a muted, desaturated grid of ~15 TikTok screenshots at 15% opacity (like the hero on your site). Right third: three stacked stats, each with a tiny colored dot the color of the relevant dimension:
 - **MDL No. 3047** — "42 state AGs vs Meta, active in N.D. Cal"
@@ -42,9 +41,8 @@
 
 **Script:**
 
-> "The 'you've been engineered' claim isn't a vibe anymore. It's the operative theory of MDL 3047 — forty-two state attorneys general suing Meta right now over product mechanics that were designed to maximize engagement. The internal research that case draws on is the Facebook Files: Meta's own slide that said we make body-image issues worse for one in three teen girls.
-> The problem is that all of that lives at the platform level. At the post level, manipulation is still invisible. A single TikTok isn't labeled. Most viewers don't have a vocabulary to describe which lever is being pulled on them.
-> LUCID is a small attempt at that vocabulary. It scores short-form video on six specific manipulation tactics, each grounded in peer-reviewed behavioral research."
+> "The 'you've been engineered' claim isn't a vibe anymore. It's the operative theory of MDL 3047 — forty-two state AGs suing Meta right now over product mechanics built to maximize engagement, citing the Facebook Files, which include Meta's own slide saying they make body-image issues worse for one in three teen girls.
+> But that case lives at the platform level. At the post level, manipulation is still invisible — a single TikTok isn't labeled and viewers don't have the vocabulary to describe which lever is being pulled. LUCID is that vocabulary: six manipulation tactics, each grounded in peer-reviewed behavioral research, scored automatically on any short-form video."
 
 **Assets:**
 - Screenshot grid: `frontend/components/hero.tsx` or the on-site hero — take a screenshot of the live site's top fold.
@@ -52,37 +50,38 @@
 
 ---
 
-## Slide 3 — Approach (≈ 50 s)
+## Slide 3 — Approach (≈ 1 min 5 s)
 
 **Visual:** One-line pipeline across the full slide width, five boxes connected by arrows:
 ```
 [ TikTok URL ]  →  [ caption + Whisper transcript + Claude Vision overlay OCR ]
-                →  [ fused text ]
-                →  [ DistilBERT multi-output head ]
+                →  [ fused text with [CAPTION] [TRANSCRIPT] [OVERLAY] tags ]
+                →  [ DistilBERT + 2 heads (composite + 6 dims) ]
                 →  [ 0–100 Scroll Trap Score + 6 per-dim scores ]
 ```
-Under the DistilBERT box, two footnote-style rows in mono gray: `trained on Claude-labeled corpus (n ≈ 3.5k)` and `human gold-set validated (n = 100)`.
+Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-base-uncased · 66M params`, `trained on Claude-labeled corpus (n ≈ 3.5k)`, `human gold-set validated (n = 100)`.
 
 **Script:**
 
-> "Here's how it works. Paste a TikTok. We pull the caption, transcribe the audio, and run keyframes through Claude Vision to grab the on-screen overlay text. The three streams get fused into one text blob. That blob goes into a fine-tuned DistilBERT with a multi-output head — one sigmoid per dimension, plus a zero-to-a-hundred composite.
-> The model was trained on roughly thirty-five hundred items from public clickbait corpora and a TikTok scrape, all relabeled by Claude Sonnet against a rubric I designed. Then I hand-labeled a hundred of them myself as a validation set."
+> "Here's how it works at inference time. Paste a TikTok URL. yt-dlp pulls the MP4 and the metadata — caption, uploader, engagement counts. ffmpeg strips the audio into mono sixteen-kilohertz WAV, which goes to Whisper — the OpenAI API if a key is set, otherwise a local fallback — and that gives us the transcript. In parallel, ffmpeg samples four evenly-spaced keyframes, and each frame goes to Claude Vision with an OCR prompt that explicitly ignores logos, usernames, and app UI, so we just get the on-screen text overlays.
+> Those three streams — caption, transcript, overlay — are fused into one blob with bracket labels, so the transformer learns that 'WAIT FOR IT' burned into the video behaves differently from the same words spoken aloud.
+> The model is a fine-tuned DistilBERT, sixty-six million parameters, with CLS pooling feeding two parallel heads — a one-unit composite regression and six independent per-dimension sigmoids. At inference we actually derive the zero-to-hundred Scroll Trap Score from the mean of the six dimension probabilities, not the regression head, because the composite head under-fires on real TikTok severity. For explanations, the per-token word highlights you'll see in the demo are Integrated Gradients against an all-PAD baseline — so they reflect actual causal contribution to each dimension's logit, not just attention weights."
 
 **Assets:**
 - Pipeline description matches `docs/REPORT.md` §6 (Data Processing Pipeline) and the ordered list in `frontend/app/about/page.tsx` § 05.
+- Code anchors if asked: `backend/pipeline/tiktok.py`, `transcribe.py`, `vision.py`, `analyze.py`, `backend/inference/deep.py`.
 
 ---
 
-## Slide 4 — Live Demo (≈ 90 s)
+## Slide 4 — Live Demo (≈ 1 min)
 
 **Visual:** A full-screen slide that just says **LIVE DEMO** in the Observatory aesthetic, with the URL in mono at the bottom: `lucid-seven-pied.vercel.app`. You click away from the deck and into the browser.
 
 **Script** (while on the site):
 
-> "This is live. lucid-seven-pied dot vercel dot app.
-> I'm going to paste a TikTok URL." *(paste a pre-cached high-trap URL from the gallery so latency is near-zero — don't pick a cold URL that needs a Whisper run)*
-> "Scroll Trap Score of *[value]*. You can see the per-dimension breakdown here — Curiosity Gap and Engagement Bait are the highest, which makes sense for this format.
-> And this is the piece I like. I can switch to the token-attribution view, and it'll tell me which specific words in the transcript drove each score. These aren't attention weights — they're Integrated Gradients, so they reflect actual causal contribution to the prediction."
+> "This is live, at lucid-seven-pied dot vercel dot app. I'll paste a pre-cached high-trap URL so we skip the Whisper round-trip." *(paste from the gallery — do not pick a cold URL)*
+> "Scroll Trap Score of *[value]*. The six per-dimension bars show which tactics fired — Curiosity Gap and Engagement Bait top this one, which is what you'd expect for a 'wait for it' format.
+> Now I'll switch to the token-attribution view. Each highlighted word is an Integrated Gradients attribution against an all-PAD baseline, computed per dimension — so I can show you the exact tokens that drove Curiosity Gap specifically, separately from what drove Engagement Bait. That's qualitatively sharper than attention rollout because it's per-dimension and reflects causal contribution, not just attention traffic."
 
 **Demo checklist (do before the deck):**
 - Verify `lucid-seven-pied.vercel.app` loads in an incognito window. No laggy first paint.
@@ -92,7 +91,7 @@ Under the DistilBERT box, two footnote-style rows in mono gray: `trained on Clau
 
 ---
 
-## Slide 5 — Results & Key Findings (≈ 55 s)
+## Slide 5 — Results & Key Findings (≈ 50 s)
 
 **Visual:** Split layout. Left half: the three-model comparison, styled like your Compare 3 Models UI — a row of three cards (Naive / Classical / Deep), each with its composite score and a one-line metric. Right half: **two** confusion-matrix PNGs stacked vertically — Curiosity Gap and Engagement Bait from `data/outputs/figures/gold/deep/`. These are the two dimensions where the deployed model performs best on the human gold set.
 
@@ -104,9 +103,9 @@ Under the DistilBERT box, two footnote-style rows in mono gray: `trained on Clau
 
 **Script:**
 
-> "Three results. One. On the primary test split, the deployed DistilBERT is the strongest composite predictor — mean absolute error of five-point-nine on the zero-to-a-hundred score, R-squared of plus-point-three-six.
-> Two. On the hundred-item human gold set, Claude and I agreed within one severity step ninety-five percent of the time. The places we disagreed were the rare dimensions — Emotional Manipulation, FOMO — and the disagreement is mostly about where to draw the moderate-versus-severe line, not whether the tactic is present.
-> Three. Classical beats deep on macro F1, but at a real cost: its composite predictions overshoot reality. Deep wins on composite because it's calibrated — softer, slower to fire, more correct when it does. That's the right trade-off for the Scroll Trap Score."
+> "Three results. First: on the 529-item held-out test split, the deployed DistilBERT is the strongest composite predictor — mean absolute error of five-point-nine on the zero-to-hundred score, R-squared of plus-point-three-seven, meaning it explains about thirty-seven percent of variance on clips it's never seen.
+> Second: on a hundred-item human gold set I labeled blind against the same rubric, Claude and I agreed within one severity step ninety-five percent of the time. Where we disagreed was almost always the moderate-versus-severe line on the rare dimensions, not whether the tactic was present — which is the right kind of disagreement to have.
+> Third: classical beats deep on macro F1 — point-four-two versus point-three-three — but classical's composite overshoots reality. Deep is calibrated: softer sigmoids, slower to fire, but more correct when it does. For a user-facing zero-to-hundred score, calibration beats firing rate, so deep ships."
 
 **Assets:**
 - `data/outputs/figures/gold/deep/curiosity_gap_confusion.png`
@@ -115,7 +114,7 @@ Under the DistilBERT box, two footnote-style rows in mono gray: `trained on Clau
 
 ---
 
-## Slide 6 — Close / scope & future work (≈ 20 s)
+## Slide 6 — Close / scope & future work (≈ 15 s)
 
 **Visual:** Three short lines stacked, each with a small dot:
 - **Not ground truth.** The rubric is one defensible cut.
@@ -126,9 +125,7 @@ Below that in mono: `github.com/lindsaygross/Lucid` and `lucid-seven-pied.vercel
 
 **Script:**
 
-> "Three things LUCID is not. It is not ground truth — it's a research tool. It does not read creator intent. It is not a finished product.
-> What I'd do next is scale the labels past a thousand items, add YouTube Shorts and eventually Reels, and partner with a platform to see whether exposing a score changes behavior.
-> Thanks. Code and report at github slash lindsaygross slash Lucid, app at lucid-seven-pied dot vercel dot app."
+> "Three caveats: not ground truth, not creator intent, not a finished product. Next steps are scaling labels past a thousand, adding Shorts and Reels, and partnering with a platform to test whether exposing a score actually changes behavior. Thanks — code and report at github slash lindsaygross slash Lucid."
 
 ---
 
@@ -150,24 +147,24 @@ Likely hard questions + the one-sentence answer to each.
 
 ---
 
-## Timing ledger (target 4:45, hard stop 5:00)
+## Timing ledger (target 4:00, hard stop 4:00)
 
 | Slide | Target | Running |
 |---|---|---|
-| 1. Title | 0:15 | 0:15 |
-| 2. Problem | 0:55 | 1:10 |
-| 3. Approach | 0:50 | 2:00 |
-| 4. Live demo | 1:30 | 3:30 |
-| 5. Results | 0:55 | 4:25 |
-| 6. Close | 0:20 | 4:45 |
+| 1. Title | 0:10 | 0:10 |
+| 2. Problem | 0:40 | 0:50 |
+| 3. Approach | 1:05 | 1:55 |
+| 4. Live demo | 1:00 | 2:55 |
+| 5. Results | 0:50 | 3:45 |
+| 6. Close | 0:15 | 4:00 |
 
-15 seconds of buffer. Rehearse once with a stopwatch.
+Zero buffer — rehearse with a stopwatch and cut if you run long on the demo. The demo slide is the easiest place to save time (skip the token-attribution beat if you're behind; keep it if you're on pace).
 
 ---
 
 ## What to paste into desktop Claude / Canva
 
-> "Build me a 6-slide Canva deck for a 5-minute Demo Day pitch. Dark theme, pure black background, Inter / Geist font family, mono accents. Per-dimension colors: Outrage `#EF4444`, FOMO `#F59E0B`, Engagement `#14B8A6`, Emotional `#EC4899`, Curiosity `#A855F7`, Dopamine `#06B6D4`.
+> "Build me a 6-slide Canva deck for a 4-minute Demo Day pitch. Dark theme, pure black background, Inter / Geist font family, mono accents. Per-dimension colors: Outrage `#EF4444`, FOMO `#F59E0B`, Engagement `#14B8A6`, Emotional `#EC4899`, Curiosity `#A855F7`, Dopamine `#06B6D4`.
 >
 > Use the slide content in `docs/DEMO_DAY.md` from my LUCID repo. One slide per `## Slide N` section. Include the scripts as speaker notes, not on the slide. Where I reference images from `data/outputs/figures/gold/deep/`, upload those two PNGs and place them on Slide 5.
 >
