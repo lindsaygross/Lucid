@@ -47,7 +47,9 @@ export function ScoreCounter({ value }: { value: number }) {
         >
           {display}
         </span>
-        <span className="absolute right-0 top-4 font-mono text-xs text-zinc-500">/ 100</span>
+        <span className="pointer-events-none absolute left-full top-4 ml-2 font-mono text-xs text-zinc-500 sm:top-6 sm:ml-3 sm:text-sm">
+          / 100
+        </span>
       </motion.div>
       <span
         className="rounded-full border px-3 py-1 font-mono text-[11px] uppercase tracking-[0.22em]"
