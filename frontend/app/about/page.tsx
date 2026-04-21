@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { SiteNav } from "@/components/site-nav";
 import { AboutSection, Cite } from "@/components/about/about-section";
 import { BackToTop } from "@/components/back-to-top";
@@ -669,6 +670,24 @@ export default function AboutPage() {
             </RefGroup>
           </div>
         </AboutSection>
+
+        <nav
+          aria-label="End of page"
+          className="mt-6 flex flex-col gap-4 border-t border-white/5 pt-10 sm:flex-row sm:items-center sm:justify-between"
+        >
+          <Link
+            href="/"
+            className="rounded-sm font-mono text-[11px] uppercase tracking-[0.32em] text-zinc-400 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 min-h-[44px] inline-flex items-center"
+          >
+            ← back to lucid
+          </Link>
+          <Link
+            href="/#analyzer"
+            className="rounded-sm font-mono text-[11px] uppercase tracking-[0.32em] text-white transition-colors hover:text-zinc-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60 min-h-[44px] inline-flex items-center"
+          >
+            try the analyzer →
+          </Link>
+        </nav>
 
         <footer className="mt-6 flex flex-col gap-3 border-t border-white/5 pt-10 text-[13px] leading-[1.6] text-zinc-500">
           <p>
