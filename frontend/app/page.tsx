@@ -18,6 +18,11 @@ type Status = "idle" | "loading" | "done" | "error";
 
 const CINEMATIC_ENABLED = process.env.NEXT_PUBLIC_CINEMATIC_INTRO !== "false";
 
+// Demo-day "try this one" example. @itsdanikasworld post whose caption
+// literally instructs "don't scroll" — on-message high-trap content.
+const EXAMPLE_URL =
+  "https://www.tiktok.com/@itsdanikasworld/video/7604982015439490317?q=dont%20scroll&t=1776447074916";
+
 function friendlyErrorMessage(raw: string | null): { headline: string; body: string } {
   const msg = (raw ?? "").toLowerCase();
   if (!msg) {
@@ -124,6 +129,13 @@ export default function Home() {
               </header>
             )}
             <AnalyzerInput onSubmit={handleAnalyze} />
+            <button
+              type="button"
+              onClick={() => handleAnalyze({ url: EXAMPLE_URL })}
+              className="rounded-sm font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-400 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+            >
+              no tiktok handy? try this one →
+            </button>
             <Link
               href="/about"
               className="rounded-sm font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-500 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
