@@ -59,7 +59,7 @@
                 →  [ DistilBERT + 2 heads (composite + 6 dims) ]
                 →  [ 0–100 Scroll Trap Score + 6 per-dim scores ]
 ```
-Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-base-uncased · 66M params`, `trained on Claude-labeled corpus (n ≈ 3.5k)`, `human gold-set validated (n = 100)`.
+Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-base-uncased · 66M params`, `n ≈ 3.5k: Webis Clickbait 2017 + Stop Clickbait 2016 + TikTok scrape, relabeled by Claude Sonnet 4.5`, `human gold-set validated (n = 100)`.
 
 **Script:**
 
@@ -145,6 +145,8 @@ Likely hard questions + the one-sentence answer to each.
 5. **"Why is naive macro F1 so close to zero?"** — It's a curated keyword dictionary, and most manipulative posts don't contain the exact phrases in the dictionary. That's the point of having it in the deck: it shows the ceiling of rule-based approaches and justifies the classical + deep investment.
 
 6. **"What happens on a non-English TikTok?"** — The Whisper transcription handles many languages, but the rubric and the DistilBERT encoder are English-trained. Current scope is English-only; multilingual would be a natural next step.
+
+7. **"Where does your training data come from?"** — Three sources merged into a 3,491-item corpus: Webis Clickbait 2017 (≈2k tweets with ordinal severity, the pretraining signal for non-binary labels), Stop Clickbait 2016 (≈1.5k headlines, weak supervision for the Curiosity Gap and Engagement Bait dimensions), and an in-domain TikTok scrape of about 200 videos via yt-dlp. Every item was relabeled by Claude Sonnet 4.5 against the rubric, and a 100-item subset was hand-labeled by me for gold-set validation.
 
 ---
 
