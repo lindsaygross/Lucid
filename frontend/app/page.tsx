@@ -7,10 +7,12 @@ import { LiveDemo } from "@/components/live-demo/live-demo";
 import { WaitState } from "@/components/wait-state";
 import { ResultsView } from "@/components/results-view";
 import { SiteNav } from "@/components/site-nav";
+import Link from "next/link";
 import { Hero } from "@/components/hero";
 import { AtmosphereBackground } from "@/components/cinematic/atmosphere-background";
 import { ScrollManifesto } from "@/components/cinematic/scroll-manifesto";
 import { AnalyzerFrame } from "@/components/cinematic/analyzer-frame";
+import { BackToTop } from "@/components/back-to-top";
 
 type Status = "idle" | "loading" | "done" | "error";
 
@@ -122,6 +124,12 @@ export default function Home() {
               </header>
             )}
             <AnalyzerInput onSubmit={handleAnalyze} />
+            <Link
+              href="/about"
+              className="rounded-sm font-mono text-[11px] uppercase tracking-[0.28em] text-zinc-500 transition-colors hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+            >
+              new here? read the about page ↗
+            </Link>
           </div>
         )}
 
@@ -158,6 +166,7 @@ export default function Home() {
       </AnalyzerFrame>
 
       <Footer />
+      <BackToTop />
     </main>
   );
 }
