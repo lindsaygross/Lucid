@@ -93,19 +93,20 @@ Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-ba
 
 ## Slide 5 — Results & Key Findings (≈ 50 s)
 
-**Visual:** Split layout. Left half: the three-model comparison, styled like your Compare 3 Models UI — a row of three cards (Naive / Classical / Deep), each with its composite score and a one-line metric. Right half: **two** confusion-matrix PNGs stacked vertically — Curiosity Gap and Engagement Bait from `data/outputs/figures/gold/deep/`. These are the two dimensions where the deployed model performs best on the human gold set.
+**Visual:** Slide headline (two lines, heavy sans): **"Deep wins on calibration. Agreement wins on honesty."** Left half below the headline: three stacked model cards (Naive / Classical / Deployed Deep), each with its key metric — Naive `Macro F1 0.014`, Classical `Macro F1 0.425 · MAE 14.3`, Deep `MAE 5.90 · R² +0.368 · Winner on composite`. Bottom caption: `HUMAN–CLAUDE WITHIN-1 AGREEMENT: 0.95 (n = 100)`. Right half: two confusion-matrix PNGs stacked — **Curiosity Gap — Gold Set · F1 0.30** and **Engagement Bait — Gold Set · F1 0.38** from `data/outputs/figures/gold/deep/`.
 
 **Headline numbers to include** (all from `docs/REPORT.md` §9 and §2.6):
 
 - Deployed model (DistilBERT): **Composite MAE 5.90, R² +0.368** on the 529-item test split
 - Within-1 human-Claude labeling agreement: **0.95** (gold set, n=100)
 - Macro F1 by model: Naive **0.014**, Classical **0.425**, Deep **0.334**
+- Engagement Bait gold-set confusion: TN=79, FP=1, FN=15, TP=5 (model is conservative — high precision, lower recall)
 
 **Script:**
 
-> "Three results. One: on the held-out test set of five-hundred-twenty-nine clips, DistilBERT posts a composite mean absolute error of five-point-nine on the zero-to-hundred scale, with an R-squared of point-three-seven — roughly thirty-seven percent of variance explained on unseen clips.
-> Two: on a hundred-item human gold set I labeled blind against the same rubric, Claude and I agreed within one severity step ninety-five percent of the time. The disagreements were almost entirely moderate-versus-severe on rare dimensions — not whether the tactic was present.
-> Three: classical beats deep on macro F1, point-four-two to point-three-three, but classical's composite overshoots. Deep is calibrated — slower to fire, more correct when it does. For a user-facing zero-to-hundred score, calibration beats firing rate. Deep ships."
+> "Two claims on this slide. Deep wins on calibration. Agreement wins on honesty.
+> Calibration. Naive — a trigger-word dictionary — sits at macro F1 of point-zero-one-four, effectively the floor. Classical hits F1 point-four-two, strong on per-dimension classification, but its composite mean absolute error is fourteen-point-three on the zero-to-hundred scale — it overshoots. DistilBERT brings that MAE down to five-point-nine with an R-squared of point-three-seven. For a user-facing score, that's the right trade.
+> Honesty. The matrices are on the hundred-item human gold set — clips the model never saw. Look at Engagement Bait: one false positive out of eighty absent examples. When the deep model fires, it's usually right. And across all six dimensions, Claude and I agreed within one severity step ninety-five percent of the time. The label pipeline the model was trained on holds up against a human."
 
 **Assets:**
 - `data/outputs/figures/gold/deep/curiosity_gap_confusion.png`
