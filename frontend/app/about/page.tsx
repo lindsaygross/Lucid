@@ -89,8 +89,8 @@ export default function AboutPage() {
           </h1>
           <p className="text-[15px] leading-[1.6] text-zinc-400 sm:text-base">
             LUCID is a proof-of-concept tool that scores short-form video for six research-grounded
-            manipulation tactics. This page is the long version of why it exists, how the rubric
-            was built, and what it can and cannot tell you.
+            manipulation tactics. This page explains why it exists, how the rubric was built, and
+            what it can and cannot tell you.
           </p>
         </header>
 
@@ -248,7 +248,7 @@ export default function AboutPage() {
         <AboutSection
           id="labels"
           eyebrow="§ 04 — how the labels were made"
-          heading="And why, at some point, I sat down and hand-labeled a hundred of them myself."
+          heading="And why I sat down and hand-labeled a hundred of them myself."
         >
           <p>
             The deployed model is a fine-tuned DistilBERT, which is a small (66M-parameter) encoder
@@ -460,7 +460,7 @@ export default function AboutPage() {
         <AboutSection
           id="references"
           eyebrow="§ 07 — references"
-          heading="Every factual claim above, sourced."
+          heading="Every claim above sourced."
         >
           <p className="text-[15px] text-zinc-400">
             Grouped by section. News and court filings first, then behavioral-research citations
