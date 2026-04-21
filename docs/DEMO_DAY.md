@@ -34,10 +34,10 @@
 
 ## Slide 2 — Problem & Motivation (≈ 40 s)
 
-**Visual:** Left two-thirds: a muted, desaturated grid of ~15 TikTok screenshots at 15% opacity (like the hero on your site). Right third: three stacked stats, each with a tiny colored dot the color of the relevant dimension:
-- **MDL No. 3047** — "42 state AGs vs Meta, active in N.D. Cal"
-- **"1 in 3 teen girls"** — Facebook Files, WSJ 2021
-- **6 dimensions** — each grounded in peer-reviewed research
+**Visual:** Left two-thirds: a muted, desaturated grid of ~15 TikTok screenshots at 15% opacity (like the hero on your site). Right third: three stacked stats, each with a tiny colored dot the color of the relevant dimension. Each bullet is a complete claim so it reads without the audio:
+- **42 state AGs are suing Meta over engineered engagement.** *MDL 3047, N.D. Cal. — active.*
+- **1 in 3 teenage girls reported worsened body image on Instagram — in Meta's own research.** *Facebook Files, WSJ 2021.*
+- **LUCID scores 6 peer-reviewed manipulation tactics on any post.** *Per-video, not per-platform.*
 
 **Script:**
 
