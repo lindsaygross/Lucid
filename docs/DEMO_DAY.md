@@ -41,8 +41,8 @@
 
 **Script:**
 
-> "The 'you've been engineered' claim isn't a vibe anymore. It's the operative theory of MDL 3047 — forty-two state AGs suing Meta right now over product mechanics built to maximize engagement, citing the Facebook Files, which include Meta's own slide saying they make body-image issues worse for one in three teen girls.
-> But that case lives at the platform level. At the post level, manipulation is still invisible — a single TikTok isn't labeled and viewers don't have the vocabulary to describe which lever is being pulled. LUCID is that vocabulary: six manipulation tactics, each grounded in peer-reviewed behavioral research, scored automatically on any short-form video."
+> "The premise that engagement is engineered rather than incidental is now the operative theory of MDL 3047 — the consolidated litigation in which forty-two state attorneys general are suing Meta over product mechanics designed to maximize time-on-app. The factual record draws directly on the Facebook Files, including Meta's own internal research acknowledging that the platform worsens body-image outcomes for one in three teenage girls on Instagram.
+> That level of scrutiny exists at the platform level. At the post level, it does not. An individual TikTok carries no disclosure of the tactics it uses, and most viewers lack the vocabulary to identify the specific mechanism being applied. LUCID is designed to provide that vocabulary: six manipulation dimensions, each grounded in peer-reviewed behavioral research, scored automatically on any short-form video."
 
 **Assets:**
 - Screenshot grid: `frontend/components/hero.tsx` or the on-site hero — take a screenshot of the live site's top fold.
