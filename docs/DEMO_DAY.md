@@ -25,7 +25,7 @@
 
 **Script:**
 
-> "LUCID. You're not addicted — you're being engineered. I'm Lindsay Gross. I come out of trust and safety, and this is a tool I built to make the scroll legible at the post level."
+> "LUCID. You're not addicted — you're engineered. I'm Lindsay Gross, I come out of trust and safety, and this is a tool for scoring that engineering one post at a time."
 
 **Assets:**
 - Wordmark: use the `LUCID` letter style from `frontend/components/lucid-logo.tsx` (font-heading, black weight, tracking-tight) — or just set it in Canva directly, it's simple type.
@@ -41,8 +41,8 @@
 
 **Script:**
 
-> "The premise that engagement is engineered rather than incidental is now the operative theory of MDL 3047 — the consolidated litigation in which forty-two state attorneys general are suing Meta over product mechanics designed to maximize time-on-app. The factual record draws directly on the Facebook Files, including Meta's own internal research acknowledging that the platform worsens body-image outcomes for one in three teenage girls on Instagram.
-> That level of scrutiny exists at the platform level. At the post level, it does not. An individual TikTok carries no disclosure of the tactics it uses, and most viewers lack the vocabulary to identify the specific mechanism being applied. LUCID is designed to provide that vocabulary: six manipulation dimensions, each grounded in peer-reviewed behavioral research, scored automatically on any short-form video."
+> "The claim that engagement is designed, not incidental, is now the operative theory of MDL 3047 — forty-two state attorneys general suing Meta over product mechanics built to maximize time-on-app. The factual record is the Facebook Files, which include Meta's own internal research finding that Instagram worsens body-image outcomes for one in three teenage girls.
+> That scrutiny exists at the platform level. At the post level, it does not. An individual TikTok carries no disclosure of the tactics it uses, and most viewers lack the vocabulary to name the mechanism. LUCID provides that vocabulary: six peer-reviewed manipulation dimensions, scored automatically on any short-form post."
 
 **Assets:**
 - Screenshot grid: `frontend/components/hero.tsx` or the on-site hero — take a screenshot of the live site's top fold.
@@ -63,9 +63,9 @@ Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-ba
 
 **Script:**
 
-> "Here's how it works at inference time. Paste a TikTok URL. yt-dlp pulls the MP4 and the metadata — caption, uploader, engagement counts. ffmpeg strips the audio into mono sixteen-kilohertz WAV, which goes to Whisper — the OpenAI API if a key is set, otherwise a local fallback — and that gives us the transcript. In parallel, ffmpeg samples four evenly-spaced keyframes, and each frame goes to Claude Vision with an OCR prompt that explicitly ignores logos, usernames, and app UI, so we just get the on-screen text overlays.
-> Those three streams — caption, transcript, overlay — are fused into one blob with bracket labels, so the transformer learns that 'WAIT FOR IT' burned into the video behaves differently from the same words spoken aloud.
-> The model is a fine-tuned DistilBERT, sixty-six million parameters, with CLS pooling feeding two parallel heads — a one-unit composite regression and six independent per-dimension sigmoids. At inference we actually derive the zero-to-hundred Scroll Trap Score from the mean of the six dimension probabilities, not the regression head, because the composite head under-fires on real TikTok severity. For explanations, the per-token word highlights you'll see in the demo are Integrated Gradients against an all-PAD baseline — so they reflect actual causal contribution to each dimension's logit, not just attention weights."
+> "At inference, the pipeline has three stages. First, extraction. The caption is pulled from TikTok metadata. The audio is transcribed by Whisper — the OpenAI API if a key is set, a local fallback otherwise. Four evenly-spaced keyframes go to Claude Vision, which reads the on-screen overlay text — things like 'POV' or 'wait for it' — and explicitly ignores logos, usernames, and app UI.
+> Second, fusion. The three streams — caption, transcript, overlay — are concatenated into one document with labeled sections, so the model can learn that overlay text, which is usually where the hook lives, carries different signal from spoken audio.
+> Third, scoring. A fine-tuned DistilBERT — sixty-six million parameters — reads the fused document and emits six per-dimension probabilities. The zero-to-hundred Scroll Trap Score is their mean. And for the explanation view, I compute Integrated Gradients per dimension against an all-padding baseline — that yields per-token causal attributions for each dimension's score, rather than a single global attention rollout."
 
 **Assets:**
 - Pipeline description matches `docs/REPORT.md` §6 (Data Processing Pipeline) and the ordered list in `frontend/app/about/page.tsx` § 05.
@@ -79,9 +79,9 @@ Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-ba
 
 **Script** (while on the site):
 
-> "This is live, at lucid-seven-pied dot vercel dot app. I'll paste a pre-cached high-trap URL so we skip the Whisper round-trip." *(paste from the gallery — do not pick a cold URL)*
-> "Scroll Trap Score of *[value]*. The six per-dimension bars show which tactics fired — Curiosity Gap and Engagement Bait top this one, which is what you'd expect for a 'wait for it' format.
-> Now I'll switch to the token-attribution view. Each highlighted word is an Integrated Gradients attribution against an all-PAD baseline, computed per dimension — so I can show you the exact tokens that drove Curiosity Gap specifically, separately from what drove Engagement Bait. That's qualitatively sharper than attention rollout because it's per-dimension and reflects causal contribution, not just attention traffic."
+> "Live, at lucid-seven-pied dot vercel dot app. I'll paste a pre-cached URL so we skip the Whisper round-trip." *(paste from the gallery — do not pick a cold URL)*
+> "Scroll Trap Score of *[value]*. The six bars underneath show which dimensions fired — on this clip, Curiosity Gap and Engagement Bait are highest, which is what you'd expect for a 'wait for it' format.
+> Now the attribution view. Each highlighted token is a per-dimension Integrated Gradients attribution, so I can show you which specific words drove Curiosity Gap, independently of what drove Engagement Bait. Two things worth noting. One, these are causal contributions to the dimension logit — not attention weights, which are often mistaken for explanations. Two, per-dimension attribution is what makes the view diagnostic: a viewer can see not just that manipulation is present, but which sentence triggered which mechanism."
 
 **Demo checklist (do before the deck):**
 - Verify `lucid-seven-pied.vercel.app` loads in an incognito window. No laggy first paint.
@@ -103,9 +103,9 @@ Under the DistilBERT box, three footnote-style rows in mono gray: `distilbert-ba
 
 **Script:**
 
-> "Three results. First: on the 529-item held-out test split, the deployed DistilBERT is the strongest composite predictor — mean absolute error of five-point-nine on the zero-to-hundred score, R-squared of plus-point-three-seven, meaning it explains about thirty-seven percent of variance on clips it's never seen.
-> Second: on a hundred-item human gold set I labeled blind against the same rubric, Claude and I agreed within one severity step ninety-five percent of the time. Where we disagreed was almost always the moderate-versus-severe line on the rare dimensions, not whether the tactic was present — which is the right kind of disagreement to have.
-> Third: classical beats deep on macro F1 — point-four-two versus point-three-three — but classical's composite overshoots reality. Deep is calibrated: softer sigmoids, slower to fire, but more correct when it does. For a user-facing zero-to-hundred score, calibration beats firing rate, so deep ships."
+> "Three results. One: on the held-out test set of five-hundred-twenty-nine clips, DistilBERT posts a composite mean absolute error of five-point-nine on the zero-to-hundred scale, with an R-squared of point-three-seven — roughly thirty-seven percent of variance explained on unseen clips.
+> Two: on a hundred-item human gold set I labeled blind against the same rubric, Claude and I agreed within one severity step ninety-five percent of the time. The disagreements were almost entirely moderate-versus-severe on rare dimensions — not whether the tactic was present.
+> Three: classical beats deep on macro F1, point-four-two to point-three-three, but classical's composite overshoots. Deep is calibrated — slower to fire, more correct when it does. For a user-facing zero-to-hundred score, calibration beats firing rate. Deep ships."
 
 **Assets:**
 - `data/outputs/figures/gold/deep/curiosity_gap_confusion.png`
@@ -125,7 +125,7 @@ Below that in mono: `github.com/lindsaygross/Lucid` and `lucid-seven-pied.vercel
 
 **Script:**
 
-> "Three caveats: not ground truth, not creator intent, not a finished product. Next steps are scaling labels past a thousand, adding Shorts and Reels, and partnering with a platform to test whether exposing a score actually changes behavior. Thanks — code and report at github slash lindsaygross slash Lucid."
+> "Three caveats: not ground truth, not creator intent, not a finished product. Next: scale the labels, add Shorts and Reels, and partner with a platform to test whether surfacing the score changes user behavior. Thanks — code and report at github slash lindsaygross slash Lucid."
 
 ---
 
