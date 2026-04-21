@@ -89,8 +89,8 @@ export default function AboutPage() {
           </h1>
           <p className="text-[15px] leading-[1.6] text-zinc-400 sm:text-base">
             LUCID is a proof-of-concept tool that scores short-form video for six research-grounded
-            manipulation tactics. This page is the long version of why it exists, how the rubric
-            was built, and what it can and cannot tell you.
+            manipulation tactics. This page explains why it exists, how the rubric was built, and
+            what it can and cannot tell you.
           </p>
         </header>
 
