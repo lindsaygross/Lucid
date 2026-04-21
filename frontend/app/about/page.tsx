@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteNav } from "@/components/site-nav";
 import { AboutSection, Cite } from "@/components/about/about-section";
+import { BackToTop } from "@/components/back-to-top";
 
 export const metadata: Metadata = {
   title: "About — LUCID",
@@ -688,6 +689,7 @@ export default function AboutPage() {
           </p>
         </footer>
       </article>
+      <BackToTop />
     </main>
   );
 }
