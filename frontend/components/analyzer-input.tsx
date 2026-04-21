@@ -63,7 +63,7 @@ export function AnalyzerInput({ onSubmit, disabled }: AnalyzerInputProps) {
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            placeholder="Paste a TikTok URL — tiktok.com/@user/video/..."
+            placeholder="https://www.tiktok.com/@username/video/7xxxxxxxxxxxxxxxxxx"
             className="w-full bg-transparent px-5 py-5 text-base text-white placeholder:text-zinc-500 focus:outline-none sm:text-lg"
             disabled={disabled}
             autoComplete="off"
@@ -79,7 +79,13 @@ export function AnalyzerInput({ onSubmit, disabled }: AnalyzerInputProps) {
             disabled={disabled}
           />
         )}
-        <div className="flex justify-end border-t border-white/5 bg-black/40 p-2">
+        <div className="flex items-center justify-between gap-3 border-t border-white/5 bg-black/40 p-2 pl-4">
+          <span
+            className="hidden font-mono text-[10px] uppercase tracking-[0.24em] text-zinc-500 sm:inline"
+            aria-hidden="true"
+          >
+            paste + <kbd className="rounded border border-white/15 px-1.5 py-0.5 text-[10px] text-zinc-300">↩</kbd> to analyze
+          </span>
           <Button
             type="submit"
             disabled={disabled}

@@ -16,6 +16,50 @@ type Status = "idle" | "loading" | "done" | "error";
 
 const CINEMATIC_ENABLED = process.env.NEXT_PUBLIC_CINEMATIC_INTRO !== "false";
 
+function friendlyErrorMessage(raw: string | null): { headline: string; body: string } {
+  const msg = (raw ?? "").toLowerCase();
+  if (!msg) {
+    return {
+      headline: "Something went wrong.",
+      body: "Try again, or swap in a different URL.",
+    };
+  }
+  if (msg.includes("private") || msg.includes("unavailable") || msg.includes("not found") || msg.includes("404")) {
+    return {
+      headline: "Couldn't reach that TikTok.",
+      body: "It may be private, removed, or region-locked. Try a different URL, or paste the caption text directly.",
+    };
+  }
+  if (msg.includes("timeout") || msg.includes("timed out")) {
+    return {
+      headline: "That took too long to download.",
+      body: "TikTok's servers can be slow. Try again in a moment, or pick a different URL.",
+    };
+  }
+  if (msg.includes("invalid") || msg.includes("parse") || msg.includes("url")) {
+    return {
+      headline: "That URL didn't look quite right.",
+      body: "Paste a TikTok video URL, e.g. tiktok.com/@username/video/7xxxxxxxxxxxxxxxxxx.",
+    };
+  }
+  if (msg.includes("rate") || msg.includes("429") || msg.includes("overload") || msg.includes("529")) {
+    return {
+      headline: "Our labeling service is rate-limited right now.",
+      body: "Claude Vision is briefly throttled. Give it 30 seconds and try again.",
+    };
+  }
+  if (msg.includes("network") || msg.includes("fetch") || msg.includes("failed to fetch")) {
+    return {
+      headline: "Network hiccup.",
+      body: "Check your connection, or the backend may be restarting. Try again in a moment.",
+    };
+  }
+  return {
+    headline: "Something went wrong while analyzing that post.",
+    body: "Try again, or swap in a different URL.",
+  };
+}
+
 export default function Home() {
   const cinematic = CINEMATIC_ENABLED;
   const [status, setStatus] = useState<Status>("idle");
@@ -83,19 +127,30 @@ export default function Home() {
 
         {status === "loading" && <WaitState />}
 
-        {status === "error" && (
-          <div className="w-full max-w-2xl rounded-2xl border border-red-500/40 bg-red-500/5 p-6 text-sm text-red-200">
-            <p className="font-medium">Something broke while analyzing that.</p>
-            <p className="mt-1 font-mono text-[11px] text-red-300/80">{error}</p>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="mt-4 rounded-full border border-red-400/40 px-4 py-1.5 text-xs text-red-100 hover:bg-red-500/10"
-            >
-              try again
-            </button>
-          </div>
-        )}
+        {status === "error" && (() => {
+          const friendly = friendlyErrorMessage(error);
+          return (
+            <div className="w-full max-w-2xl rounded-2xl border border-red-500/40 bg-red-500/5 p-6 text-sm text-red-200">
+              <p className="font-medium">{friendly.headline}</p>
+              <p className="mt-1 text-red-200/90">{friendly.body}</p>
+              {error && (
+                <details className="mt-3 text-red-300/70">
+                  <summary className="cursor-pointer font-mono text-[10px] uppercase tracking-[0.22em]">
+                    technical detail
+                  </summary>
+                  <p className="mt-2 font-mono text-[11px]">{error}</p>
+                </details>
+              )}
+              <button
+                type="button"
+                onClick={handleReset}
+                className="mt-4 rounded-full border border-red-400/40 px-4 py-1.5 text-xs text-red-100 hover:bg-red-500/10"
+              >
+                try again
+              </button>
+            </div>
+          );
+        })()}
 
         {status === "done" && result && (
           <ResultsView result={result} onReset={handleReset} />
