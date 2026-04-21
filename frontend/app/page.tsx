@@ -192,7 +192,18 @@ function Footer() {
           rubric grounded in peer-reviewed behavioral research, not a measurement of intent.
         </p>
         <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[0.22em]">
-          <span>Built by Lindsay Gross · 2026</span>
+          <span>
+            Built by{" "}
+            <a
+              href="https://www.linkedin.com/in/lindsay-gross1/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-sm text-zinc-400 underline decoration-white/20 decoration-dotted underline-offset-4 transition-colors hover:decoration-white/60 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/60"
+            >
+              Lindsay Gross
+            </a>{" "}
+            · 2026
+          </span>
           <span className="text-zinc-700" aria-hidden="true">·</span>
           <a
             href="https://github.com/lindsaygross/Lucid"
