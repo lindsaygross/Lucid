@@ -460,7 +460,7 @@ export default function AboutPage() {
         <AboutSection
           id="references"
           eyebrow="§ 07 — references"
-          heading="Every factual claim above, sourced."
+          heading="Every claim above sourced."
         >
           <p className="text-[15px] text-zinc-400">
             Grouped by section. News and court filings first, then behavioral-research citations
